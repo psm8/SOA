@@ -4,7 +4,10 @@ import java.util.List;
 
 @Remote(ISeatManagement.class)
 @Singleton
-public class SeatManagment implements ISeatManagement{
+public class SeatManagement implements ISeatManagement{
+    public SeatManagement() {
+    }
+
     @Override
     public List getSeatList() {
         return null;

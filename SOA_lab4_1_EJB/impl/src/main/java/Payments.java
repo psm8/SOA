@@ -1,7 +1,10 @@
 import javax.ejb.Remote;
 import javax.ejb.Stateful;
+import javax.ejb.Stateless;
 
-@Remote
-@Stateful
+@Remote(IPayments.class)
+@Stateless
 public class Payments implements IPayments {
+    public Payments() {
+    }
 }

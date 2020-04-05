@@ -1,7 +1,9 @@
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
 
-@Remote(ISeatManagement.class)
+@Remote(ISeatAvailability.class)
 @Stateless
-public class SeatAvailability {
+public class SeatAvailability implements ISeatAvailability{
+    public SeatAvailability() {
+    }
 }
