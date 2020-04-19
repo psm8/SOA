@@ -2,19 +2,20 @@ import model.Book;
 import model.enumeration.BookType;
 import model.enumeration.Currency;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import javax.annotation.PostConstruct;
 
-import javax.enterprise.context.RequestScoped;
+import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
 
 @Named
-@RequestScoped
-public class BooksTableBean {
+@ViewScoped
+public class BooksTableBean implements Serializable {
 
     private static final Random RANDOM = new Random();
     private List<Book> books = new ArrayList<>();
