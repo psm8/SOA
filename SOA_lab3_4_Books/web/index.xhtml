@@ -13,6 +13,18 @@
             width: 90% !important;
             margin: 17px 58px 0 !important;
         }
+        .selectionColumn {
+            width:16px;
+            text-align:center;
+        }
+        .idColumn {
+            width:32px;
+            text-align:center;
+        }
+        .ui-filter-column .ui-column-customfilter .custom-filter {
+            width: 100%;
+            box-sizing: border-box;
+        }
     </style>
 </h:head>
 <h:body>
@@ -20,19 +32,27 @@
 
     <h:form id="booksForm">
 
-        <p:dataTable id="studentTable" binding="#{table}" value="#{booksTableBean.books}" var="book"
-                     widgetVar="carsTable" class="tableUpdated"
+        <p:dataTable id="studentTable" class="tableUpdated" binding="#{table}" var="book" widgetVar="bookTable"
+                     value="#{booksTableBean.books}" filteredValue="#{booksTableBean.filteredBooks}"
+                     selection="#{booksTableBean.selectedBooks}" rowKey="#{book.id}"
+                     rowSelectMode="checkbox"
                      emptyMessage="Nie znaleziono książek spełniających podane wymagania">
-            <p:column headerText="Id">
+            <p:column selectionMode="multiple" styleClass="selectionColumn"/>
+            <p:column headerText="Id" styleClass="idColumn">
                 <h:outputText value="#{table.rowIndex + 1}" />
             </p:column>
-            <p:column filterBy="#{book.name}" headerText="Tytuł" filterMatchMode="contains">
+            <p:column headerText="Tytuł" filterBy="#{book.name}" filterMatchMode="contains">
                 <h:outputText value="#{book.name}" />
             </p:column>
-            <p:column headerText="Autor">
+            <p:column headerText="Autor" filterBy="#{book.author}" filterMatchMode="contains">
                 <h:outputText value="#{book.author}" />
             </p:column>
-            <p:column headerText="Typ">
+            <p:column headerText="Typ" filterBy="#{book.bookType}" filterMatchMode="in">
+            <f:facet name="filter">
+                <p:selectCheckboxMenu label="Typy" onchange="PF('bookTable').filter()" scrollHeight="150" styleClass="custom-filter">
+                    <f:selectItems value="#{booksTableBean.bookTypes}" />
+                </p:selectCheckboxMenu>
+            </f:facet>
                 <h:outputText value="#{book.bookType}" />
             </p:column>
             <p:column ilterBy="#{book.price}" headerText="Cena">
