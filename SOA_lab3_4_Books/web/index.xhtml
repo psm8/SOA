@@ -3,6 +3,7 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui">
 <h:head>
@@ -25,18 +26,43 @@
             width: 100%;
             box-sizing: border-box;
         }
+        .ui-datatable-header {
+            height: 40px;
+        }
+        .columnToggler {
+            float:right;
+            width: 20%;
+        }
+        .displayRange {
+            font-size: 9px;
+        }
+        .red {
+            color: red;
+        }
+
+        .black{
+            color: black;
+        }
     </style>
+
+    <h:outputScript library = "js" name = "changeCurrency.js" />
+
 </h:head>
 <h:body>
+
     <center><h2><h:outputText value="Książki"/></h2></center>
 
     <h:form id="booksForm">
 
-        <p:dataTable id="studentTable" class="tableUpdated" binding="#{table}" var="book" widgetVar="bookTable"
+        <p:dataTable id="books" class="tableUpdated" binding="#{table}" var="book" widgetVar="bookTable"
                      value="#{booksTableBean.books}" filteredValue="#{booksTableBean.filteredBooks}"
                      selection="#{booksTableBean.selectedBooks}" rowKey="#{book.id}"
                      rowSelectMode="checkbox"
                      emptyMessage="Nie znaleziono książek spełniających podane wymagania">
+            <f:facet name="header">
+                <p:commandButton id="toggler" type="button" value="Kolumny" class="columnToggler" icon="pi pi-align-justify" />
+                <p:columnToggler datasource="books" trigger="toggler" />
+            </f:facet>
             <p:column selectionMode="multiple" styleClass="selectionColumn"/>
             <p:column headerText="Id" styleClass="idColumn">
                 <h:outputText value="#{table.rowIndex + 1}" />
@@ -55,22 +81,40 @@
             </f:facet>
                 <h:outputText value="#{book.bookType}" />
             </p:column>
-            <p:column ilterBy="#{book.price}" headerText="Cena">
+            <p:column id="idPrice" headerText="Cena" filterBy="#{book.price}" filterFunction="#{filtersBean.filterByPrice}">
                 <f:facet name="filter">
-                    <h3>Range Slider</h3>
-                    <h:panelGrid columns="1" style="margin-bottom: 10px">
-                        <h:outputText id="displayRange" value="Between #{sliderView.number8} and #{sliderView.number9}" />
-                        <p:slider for="txt6,txt7" display="displayRange" style="width: 400px" range="true" displayTemplate="Between {min} and {max}" />
-                    </h:panelGrid>
-                    <h:inputHidden id="txt6" value="#{sliderView.number8}" />
-                    <h:inputHidden id="txt7" value="#{sliderView.number9}" />
+                    <h:inputHidden />
+                </f:facet>
+                <f:facet name="header">
+                    <h:outputText value="Cena &lt;br /&gt;" escape="false"/>
+                    <h:outputText id="displayRange" value="Pomiędzy #{filtersBean.costMin} a #{filtersBean.costMax}" styleClass="displayRange"/>
+                    <p:slider for="costMin,costMax" display="displayRange" range="true" minValue="0.0" maxValue="100.0" displayTemplate="Between {min} and {max}" onSlideEnd="PF('bookTable').filter()"/>
+                    <h:inputHidden id="costMin" value="#{filtersBean.costMin}" />
+                    <h:inputHidden id="costMax" value="#{filtersBean.costMax}" />
                 </f:facet>
                 <h:outputText value="#{book.price}" />
             </p:column>
             <p:column headerText="Waluta">
-                <h:outputText value="#{book.currency}" />
+                <f:facet name="header">
+                    <p:selectOneButton onchange="changeCurrency('currencyId');" styleClass="custom-filter" widgetVar="selectCurrency">
+                        <f:selectItem itemLabel="Orginalna" itemValue="false" />
+                        <f:selectItem itemLabel="Przeliczona" itemValue="true" />
+                        <p:ajax event="change" update="idPrice" listener="#{booksTableBean.calculatePricePLN(book.currency)}" global="false"/>
+                    </p:selectOneButton>
+                </f:facet>
+                <h:outputText id="currencyId" value="#{book.currency}" styleClass="black"/>
             </p:column>
-            <p:column headerText="Ilość stron">
+            <p:column headerText="Ilość stron" filterBy="#{book.pageNo}" filterFunction="#{filtersBean.filterByPageNo}">
+                <f:facet name="filter">
+                    <h:inputHidden />
+                </f:facet>
+                <f:facet name="header">
+                    <h:outputText value="Ilość stron &lt;br /&gt;" escape="false"/>
+                    <h:outputText id="displayRange2" value="Pomiędzy #{filtersBean.pageNoMin} a #{filtersBean.pageNoMax}" styleClass="displayRange"/>
+                    <p:slider for="pageNoMin,pageNoMax" display="displayRange2" range="true" minValue="0" maxValue="1000" displayTemplate="Between {min} and {max}" onSlideEnd="PF('bookTable').filter()"/>
+                    <h:inputHidden id="pageNoMin" value="#{filtersBean.pageNoMin}" />
+                    <h:inputHidden id="pageNoMax" value="#{filtersBean.pageNoMax}" />
+                </f:facet>
                 <h:outputText value="#{book.pageNo}" />
             </p:column>
         </p:dataTable>

@@ -29,6 +29,10 @@ public class BooksTableBean implements Serializable {
         }
     }
 
+    public boolean calculatePricePLN(String currency){
+        return false;
+    }
+
     public BookType[] getBookTypes() {
         return model.enumeration.BookType.values();
     }
@@ -60,11 +64,5 @@ public class BooksTableBean implements Serializable {
     public void setSelectedBooks(List<Book> selectedBooks) {
         this.selectedBooks = selectedBooks;
     }
-
-/*    public void getMaxPrice(){
-        double maxPrice = Collections.max(this.books, Comparator.comparing(b -> b));
-        return
-
-    }*/
 }
 
