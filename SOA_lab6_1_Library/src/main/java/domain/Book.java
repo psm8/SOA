@@ -10,9 +10,6 @@ public class Book {
     @GeneratedValue
     @Column(name = "id", nullable = false)
     private int id;
-    @ManyToOne
-    @JoinColumn(name="catalog_id")
-    private Catalog catalog;
     @Column(name = "title", nullable = false)
     private String title;
     @OneToOne
@@ -30,14 +27,6 @@ public class Book {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public Catalog getCatalog() {
-        return catalog;
-    }
-
-    public void setCatalog(Catalog catalog) {
-        this.catalog = catalog;
     }
 
     public String getTitle() {

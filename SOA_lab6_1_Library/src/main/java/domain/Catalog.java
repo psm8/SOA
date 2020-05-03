@@ -11,8 +11,9 @@ public class Catalog {
     @GeneratedValue
     @Column(name = "id", nullable = false)
     private int id;
-    @OneToMany(mappedBy="catalog")
-    private List<Book> books;
+    @ManyToOne
+    @JoinColumn(name="book_id")
+    private Book book;
 
     public int getId() {
         return id;
@@ -22,11 +23,11 @@ public class Catalog {
         this.id = id;
     }
 
-    public List getBooks() {
-        return books;
+    public Book getBook() {
+        return book;
     }
 
-    public void setBooks(List books) {
-        this.books = books;
+    public void setBook(Book book) {
+        this.book = book;
     }
 }

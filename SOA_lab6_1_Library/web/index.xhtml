@@ -6,7 +6,7 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 <h:head>
-    <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1" http-equiv="X-UA-Conpatible" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, charset=utf-8" http-equiv="X-UA-Conpatible" />
     <h:outputStylesheet library="css" name="bootstrap.min.css" />
     <title>Library</title>
     <style type="text/css">
@@ -28,23 +28,27 @@
                 <h:outputText value="#{catalog.id}" />
             </h:column>
             <h:column>
-                <f:facet name="header">Student Name</f:facet>
+                <f:facet name="header">Title</f:facet>
                 <h:outputText value="#{student.name}" />
             </h:column>
             <h:column>
-                <f:facet name="header">Email Address</f:facet>
+                <f:facet name="header">Author</f:facet>
                 <h:outputText value="#{student.email}" />
             </h:column>
             <h:column>
-                <f:facet name="header">Password</f:facet>
+                <f:facet name="header">ISBN</f:facet>
                 <h:outputText value="#{student.password}" />
             </h:column>
             <h:column>
-                <f:facet name="header">Gender</f:facet>
+                <f:facet name="header">Category</f:facet>
                 <h:outputText value="#{student.gender}" />
             </h:column>
             <h:column>
-                <f:facet name="header">Address</f:facet>
+                <f:facet name="header">Overall Count</f:facet>
+                <h:outputText value="#{student.address}" />
+            </h:column>
+            <h:column>
+                <f:facet name="header">Available</f:facet>
                 <h:outputText value="#{student.address}" />
             </h:column>
             <h:column>

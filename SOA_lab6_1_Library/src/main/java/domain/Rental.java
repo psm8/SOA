@@ -1,6 +1,7 @@
 package domain;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name = "rental")
@@ -11,15 +12,17 @@ public class Rental {
     @Column(name = "id", nullable = false)
     private int id;
     @OneToOne
-    @JoinColumn(name = "book_id")
-    private Book book;
+    @JoinColumn(name = "catalog_id", nullable = false)
+    private Catalog catalog;
     @OneToOne
-    @JoinColumn(name = "reader_id")
+    @JoinColumn(name = "reader_id", nullable = false)
     private Reader reader;
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "date_of_rental", nullable = false)
-    private int dateOfRental;
-    @Column(name = "date_of_return", nullable = false, length = 13)
-    private int dateOfReturn;
+    private Date dateOfRental;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "date_of_return")
+    private Date dateOfReturn;
 
     public int getId() {
         return id;
@@ -29,12 +32,12 @@ public class Rental {
         this.id = id;
     }
 
-    public Book getBook() {
-        return book;
+    public Catalog getCatalog() {
+        return catalog;
     }
 
-    public void setBook(Book book) {
-        this.book = book;
+    public void setCatalog(Book catalof) {
+        this.catalog = catalog;
     }
 
     public Reader getReader() {
@@ -45,19 +48,19 @@ public class Rental {
         this.reader = reader;
     }
 
-    public int getDateOfRental() {
+    public Date getDateOfRental() {
         return dateOfRental;
     }
 
-    public void setDateOfRental(int dateOfRental) {
+    public void setDateOfRental(Date dateOfRental) {
         this.dateOfRental = dateOfRental;
     }
 
-    public int getDateOfReturn() {
+    public Date getDateOfReturn() {
         return dateOfReturn;
     }
 
-    public void setDateOfReturn(int dateOfReturn) {
+    public void setDateOfReturn(Date dateOfReturn) {
         this.dateOfReturn = dateOfReturn;
     }
 
