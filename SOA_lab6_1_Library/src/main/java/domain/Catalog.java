@@ -12,7 +12,7 @@ public class Catalog {
     @Column(name = "id", nullable = false)
     private int id;
     @OneToMany(mappedBy="catalog")
-    private List books;
+    private List<Book> books;
 
     public int getId() {
         return id;
