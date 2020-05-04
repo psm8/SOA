@@ -47,6 +47,9 @@ public class StartupBean {
                 "Budweiser", "Coors Light", "PBR").forEach(name ->
                 authorRepository.create(new Author(name))
         );
+
+        catalogRepository.create(new Catalog(new Book(1234567890123L, "title 1",
+                new Author("author1"), new Category("cat1")), false));
     }
 
 }

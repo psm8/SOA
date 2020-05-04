@@ -27,8 +27,8 @@
                 <h:outputText value="#{table.rowIndex + 1}" />
             </h:column>
             <h:column>
-                <f:facet name="header">Category</f:facet>
-                <h:outputText value="#{catalogEntry.book.category}" />
+                <f:facet name="header">ISBN</f:facet>
+                <h:outputText value="#{catalogEntry.book.isbn}" />
             </h:column>
             <h:column>
                 <f:facet name="header">Title</f:facet>
@@ -36,11 +36,11 @@
             </h:column>
             <h:column>
                 <f:facet name="header">Author</f:facet>
-                <h:outputText value="#{catalogEntry.book.author}" />
+                <h:outputText value="#{catalogEntry.book.author.name}" />
             </h:column>
             <h:column>
-                <f:facet name="header">ISBN</f:facet>
-                <h:outputText value="#{catalogEntry.book.isbn}" />
+                <f:facet name="header">Category</f:facet>
+                <h:outputText value="#{catalogEntry.book.category.name}" />
             </h:column>
             <h:column>
                 <f:facet name="header">isRented</f:facet>
@@ -56,7 +56,7 @@
             </h:column>
             <h:column>
                 <f:facet name="header">Rent</f:facet>
-                <h:commandButton action="#{catalogBean.deleteStudentRecord(student.id)}" value="Rent" class="btn btn-danger" />
+                <h:commandButton action="#{catalogBean.deleteStudentRecord(student.id)}" value="Rent" class="btn btn-info" />
             </h:column>
         </h:dataTable>
         <center>

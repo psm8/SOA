@@ -11,10 +11,10 @@ public class Book {
     private Long isbn;
     @Column(name = "title", nullable = false)
     private String title;
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name="author_id")
     private Author author;
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name="category_name")
     private Category category;
 

@@ -7,7 +7,7 @@ public interface CRUDRepository<T> {
 
     T get(T c);
 
-    List<T> getAll();
+    List<T> getAll(Class type);
 
     T update(T c);
 

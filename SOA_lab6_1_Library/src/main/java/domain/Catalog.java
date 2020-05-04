@@ -10,7 +10,7 @@ public class Catalog {
     @GeneratedValue
     @Column(name = "id", nullable = false)
     private Integer id;
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name="book_isbn")
     private Book book;
     @Column(name = "is_rented", nullable = false)

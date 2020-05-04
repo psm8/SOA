@@ -31,7 +31,7 @@ public class CatalogBean {
     }
 
     public List<Catalog> getCatalogsListFromDB() {
-        return catalogRepository.getAll();
+        return catalogRepository.getAll(Catalog.class);
     }
 
 

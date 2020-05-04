@@ -11,10 +11,10 @@ public class Rental {
     @GeneratedValue
     @Column(name = "id", nullable = false)
     private Integer id;
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "catalog_id", nullable = false)
     private Catalog catalog;
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "reader_id", nullable = false)
     private Reader reader;
     @Temporal(TemporalType.TIMESTAMP)

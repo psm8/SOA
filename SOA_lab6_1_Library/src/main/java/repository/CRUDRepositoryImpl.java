@@ -3,6 +3,7 @@ package repository;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaQuery;
 import java.util.List;
 
 @Stateless
@@ -12,7 +13,6 @@ public class CRUDRepositoryImpl<T> implements CRUDRepository<T> {
     EntityManager em;
 
     public CRUDRepositoryImpl() {
-        super();
     }
 
     @Override
@@ -27,8 +27,10 @@ public class CRUDRepositoryImpl<T> implements CRUDRepository<T> {
     }
 
     @Override
-    public List<T> getAll() {
-        return null;
+    public List<T> getAll(Class type) {
+        CriteriaQuery<T> cq = em.getCriteriaBuilder().createQuery(type);
+        cq.select(cq.from(type));
+        return em.createQuery(cq).getResultList();
     }
 
     @Override
