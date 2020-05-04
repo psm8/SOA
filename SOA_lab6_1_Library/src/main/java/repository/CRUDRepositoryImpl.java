@@ -17,13 +17,14 @@ public class CRUDRepositoryImpl<T> implements CRUDRepository<T> {
 
     @Override
     public T create(T obj) {
-        em.persist(obj);
+        em.merge(obj);
         return obj;
     }
 
     @Override
-    public T get(T c) {
-        return null;
+    @SuppressWarnings("unchecked")
+    public T get(Class type, Object id) {
+        return (T) em.find(type, id);
     }
 
     @Override
@@ -34,12 +35,14 @@ public class CRUDRepositoryImpl<T> implements CRUDRepository<T> {
     }
 
     @Override
-    public T update(T c) {
-        return null;
+    public T update(T obj) {
+        em.merge(obj);
+        return obj;
     }
 
     @Override
-    public void delete(T c) {
-
+    public void delete(Class type, Object id) {
+        Object ref = this.em.getReference(type, id);
+        this.em.remove(ref);
     }
 }

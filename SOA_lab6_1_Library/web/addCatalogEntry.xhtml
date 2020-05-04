@@ -27,33 +27,41 @@
         <div class="form-group">
             <h:outputLabel for="isbn" class="control-label col-sm-4">ISBN:</h:outputLabel>
             <div class="col-sm-4">
-                <h:inputText id="isbn-id" value="#{catalogEntryBean.isbn}" class="form-control" validatorMessage="ISBN is required">
+
+                <h:inputText
+                        id="isbn-id" value="#{catalogEntryBean.isbn}" class="form-control" validatorMessage="ISBN is required, length must be 13">
+                    <f:validateLength minimum="13" maximum="13" />
+                    <f:convertNumber integerOnly="true" />
                     <f:validateRequired />
                 </h:inputText>
+                <h:message for="isbn-id" style="color:red" />
             </div>
         </div>
         <div class="form-group">
             <h:outputLabel for="title" class="control-label col-sm-4">Title:</h:outputLabel>
             <div class="col-sm-4">
-                <h:inputText id="email-id" value="#{catalogEntryBean.title}" class="form-control" validatorMessage="Title Id is required">
+                <h:inputText id="title-id" value="#{catalogEntryBean.title}" class="form-control" validatorMessage="Title Id is required">
                     <f:validateRequired/>
                 </h:inputText>
+                <h:message for="title-id" style="color:red" />
             </div>
         </div>
         <div class="form-group">
             <h:outputLabel for="author" class="control-label col-sm-4">Author:</h:outputLabel>
             <div class="col-sm-4">
-                <h:inputSecret id="author-id" value="#{catalogEntryBean.author}" class="form-control" validatorMessage="Author is required">
+                <h:inputText id="author-id" value="#{catalogEntryBean.author}" class="form-control" validatorMessage="Author is required">
                     <f:validateRequired/>
-                </h:inputSecret>
+                </h:inputText>
+                <h:message for="author-id" style="color:red" />
             </div>
         </div>
         <div class="form-group">
             <h:outputLabel for="category" class="control-label col-sm-4">Category:</h:outputLabel>
             <div class="col-sm-4">
-                <h:inputSecret id="category-id" value="#{catalogEntryBean.category}" class="form-control" validatorMessage="CAtegory is required">
+                <h:inputText id="category-id" value="#{catalogEntryBean.category}" class="form-control" validatorMessage="Category is required">
                     <f:validateRequired/>
-                </h:inputSecret>
+                </h:inputText>
+                <h:message for="category-id" style="color:red" />
             </div>
         </div>
         <div class="form-group">

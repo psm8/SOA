@@ -7,7 +7,7 @@ import javax.annotation.PostConstruct;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.inject.Inject;
-import java.util.stream.Stream;
+import java.util.Date;
 
 @Singleton
 @Startup
@@ -42,14 +42,40 @@ public class StartupBean {
 
     @PostConstruct
     private void startup() {
-        Stream.of("Kentucky Brunch Brand Stout", "Marshmallow Handjee",
-                "Barrel-Aged Abraxas", "Heady Topper",
-                "Budweiser", "Coors Light", "PBR").forEach(name ->
-                authorRepository.create(new Author(name))
-        );
 
-        catalogRepository.create(new Catalog(new Book(1234567890123L, "title 1",
-                new Author("author1"), new Category("cat1")), false));
+        for (int i = 0; i < 50; i++) {
+            Date[] dates = getRandomDates();
+            rentalRepository.create(new Rental(
+                    new Catalog(
+                            new Book(getRandomIsbn(), getRandomName("title"),
+                                    new Author(getRandomName("author")),
+                                    new Category(getRandomName("category"))), getIsRented(dates[1])),
+                    new Reader(getRandomName("name"), getRandomName("surname")),
+                    dates[0], dates[1]));
+        }
+    }
+
+    private String getRandomName(String name){
+        return name + (int) (5 * Math.random());
+    }
+
+    private Long getRandomIsbn(){
+        return 1000000000000L + (long) (999999999999L * Math.random());
+    }
+
+    private Date[] getRandomDates(){
+        long msDateOfRental = 70L * 365 * 24 * 60 * 60 * 1000 + (long)(10L * 365 * 24 * 60 * 60 * 1000 * Math.random());
+
+        if (Math.random() > 0.5){
+            long msDateOfReturn = msDateOfRental + (long)(1L * 365 * 24 * 60 * 60 * 1000 * Math.random() + 1);
+            return new Date[]{new Date(msDateOfRental), new Date(msDateOfReturn)};
+        } else {
+            return new Date[]{new Date(msDateOfRental), null};
+        }
+    }
+
+    private boolean getIsRented(Date d) {
+        return (d != null);
     }
 
 }

@@ -77,13 +77,35 @@ public class CatalogEntryBean {
             catalog.setBook(book);
             catalog.setIsRented(false);
 
-            authorRepository.create(author);
-            bookRepository.create(book);
             catalogRepository.create(catalog);
-            categoryRepository.create(category);
-        } catch (Exception e){ return e.getMessage();}
+        } catch (Exception e){ return "addCatalogEntry.xhtml?faces-redirect=true";}
 
-        return "success";
+        return "catalog.xhtml?faces-redirect=true";
+    }
+
+    public String createUpdateEntry() {
+        try {
+            Catalog catalog = new Catalog();
+            Book book = new Book();
+            Author author = new Author();
+            Category category = new Category();
+
+            category.setName(this.category);
+
+            author.setName(this.author);
+
+            book.setIsbn(this.isbn);
+            book.setTitle(this.title);
+            book.setAuthor(author);
+            book.setCategory(category);
+
+            catalog.setBook(book);
+            catalog.setIsRented(false);
+
+            catalogRepository.create(catalog);
+        } catch (Exception e){ return "addCatalogEntry.xhtml?faces-redirect=true";}
+
+        return "catalog.xhtml?faces-redirect=true";
     }
 
 /*    public String getCatalogEntry(int studentId) {
