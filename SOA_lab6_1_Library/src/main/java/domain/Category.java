@@ -7,9 +7,15 @@ import javax.persistence.*;
 public class Category {
 
     @Id
-    @GeneratedValue
     @Column(name = "name", nullable = false)
     String name;
+
+    public Category() {
+    }
+
+    public Category(String name) {
+        this.name = name;
+    }
 
     public String getName() {
         return name;

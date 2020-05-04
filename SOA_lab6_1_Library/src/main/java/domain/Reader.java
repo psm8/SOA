@@ -9,17 +9,25 @@ public class Reader {
     @Id
     @GeneratedValue
     @Column(name = "id", nullable = false)
-    private int id;
+    private Integer id;
     @Column(name = "name", nullable = false)
     private String name;
     @Column(name = "surname", nullable = false)
     private String surname;
 
-    public int getId() {
+    public Reader() {
+    }
+
+    public Reader(String name, String surname) {
+        this.name = name;
+        this.surname = surname;
+    }
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, charset=utf-8" http-equiv="X-UA-Conpatible" />
+    <h:outputStylesheet library="css" name="bootstrap.min.css" />
+    <title>Add Catalog Entry</title>
+    <style type="text/css">
+        .btnWidth {
+            width: 80px;
+        }
+    </style>
+</h:head>
+<h:body>
+    <h:form id="addCatalogEntryForm" class="form-horizontal">
+        <div class="form-group">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4">
+                <h2>Add Catalog Entry</h2>
+            </div>
+        </div>
+        <hr/>
+        <div class="form-group">
+            <h:outputLabel for="isbn" class="control-label col-sm-4">ISBN:</h:outputLabel>
+            <div class="col-sm-4">
+                <h:inputText id="isbn-id" value="#{catalogEntryBean.isbn}" class="form-control" validatorMessage="ISBN is required">
+                    <f:validateRequired />
+                </h:inputText>
+            </div>
+        </div>
+        <div class="form-group">
+            <h:outputLabel for="title" class="control-label col-sm-4">Title:</h:outputLabel>
+            <div class="col-sm-4">
+                <h:inputText id="email-id" value="#{catalogEntryBean.title}" class="form-control" validatorMessage="Title Id is required">
+                    <f:validateRequired/>
+                </h:inputText>
+            </div>
+        </div>
+        <div class="form-group">
+            <h:outputLabel for="author" class="control-label col-sm-4">Author:</h:outputLabel>
+            <div class="col-sm-4">
+                <h:inputSecret id="author-id" value="#{catalogEntryBean.author}" class="form-control" validatorMessage="Author is required">
+                    <f:validateRequired/>
+                </h:inputSecret>
+            </div>
+        </div>
+        <div class="form-group">
+            <h:outputLabel for="category" class="control-label col-sm-4">Category:</h:outputLabel>
+            <div class="col-sm-4">
+                <h:inputSecret id="category-id" value="#{catalogEntryBean.category}" class="form-control" validatorMessage="CAtegory is required">
+                    <f:validateRequired/>
+                </h:inputSecret>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4">
+                <div class="col-sm-2">
+                    <h:commandButton value="Save" action="#{catalogEntryBean.createCatalogEntry()}" class="btn btn-success btnWidth" />
+                </div>
+                <div class="col-sm-1">
+                </div>
+                <div class="col-sm-2">
+                    <h:link outcome="catalog" value="Go back to catalog" class="btn btn-primary" />
+                </div>
+            </div>
+        </div>
+    </h:form>
+</h:body>
+</html>

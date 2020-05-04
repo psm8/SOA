@@ -10,7 +10,7 @@ public class Rental {
     @Id
     @GeneratedValue
     @Column(name = "id", nullable = false)
-    private int id;
+    private Integer id;
     @OneToOne
     @JoinColumn(name = "catalog_id", nullable = false)
     private Catalog catalog;
@@ -24,11 +24,21 @@ public class Rental {
     @Column(name = "date_of_return")
     private Date dateOfReturn;
 
-    public int getId() {
+    public Rental() {
+    }
+
+    public Rental(Catalog catalog, Reader reader, Date dateOfRental, Date dateOfReturn) {
+        this.catalog = catalog;
+        this.reader = reader;
+        this.dateOfRental = dateOfRental;
+        this.dateOfReturn = dateOfReturn;
+    }
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

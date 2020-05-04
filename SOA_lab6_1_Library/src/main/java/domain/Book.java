@@ -7,26 +7,33 @@ import javax.persistence.*;
 public class Book {
 
     @Id
-    @GeneratedValue
-    @Column(name = "id", nullable = false)
-    private int id;
+    @Column(name = "isbn", nullable = false, length = 13)
+    private Long isbn;
     @Column(name = "title", nullable = false)
     private String title;
     @OneToOne
     @JoinColumn(name="author_id")
     private Author author;
-    @Column(name = "isbn", nullable = false, length = 13)
-    private int ISBN;
     @OneToOne
     @JoinColumn(name="category_name")
     private Category category;
 
-    public int getId() {
-        return id;
+    public Book() {
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public Book(Long isbn, String title, Author author, Category category) {
+        this.isbn = isbn;
+        this.title = title;
+        this.author = author;
+        this.category = category;
+    }
+
+    public Long getIsbn() {
+        return isbn;
+    }
+
+    public void setIsbn(Long isbn) {
+        this.isbn = isbn;
     }
 
     public String getTitle() {
@@ -43,14 +50,6 @@ public class Book {
 
     public void setAuthor(Author author) {
         this.author = author;
-    }
-
-    public int getISBN() {
-        return ISBN;
-    }
-
-    public void setISBN(int ISBN) {
-        this.ISBN = ISBN;
     }
 
     public Category getCategory() {
