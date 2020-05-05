@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+<h:head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, charset=utf-8" http-equiv="X-UA-Conpatible" />
+    <h:outputStylesheet library="css" name="bootstrap.min.css" />
+    <title>Library</title>
+    <style type="text/css">
+        .tableUpdated {
+            width: 90% !important;
+            margin: 17px 58px 0 !important;
+        }
+        .btnSpace {
+            margin: 17px;
+        }
+    </style>
+</h:head>
+<h:body>
+    <center><h2><h:outputText value="Query"/></h2></center>
+        <h:form id="queriesForm">
+            <center>
+                <h:commandButton action="#{queriesBean.getAllReadersByAuthor('author1')}" value="Get All Readers by author1" class="btn btn-warning btnSpace" />
+                <h:commandButton action="#{queriesBean.getAllReadersByBook('title1')}" value="Get All Readers by title1" class="btn btn-warning btnSpace" />
+                <h:commandButton action="#{queriesBean.getAllAuthorsByReader('surname1')}" value="Get All Readers by surname1" class="btn btn-warning btnSpace" />
+                <h:commandButton action="catalog.xhtml?faces-redirect=true" value="Go back to catalog" class="btn btn-success btnSpace" />
+            </center>
+        </h:form>
+</h:body>
+</html>

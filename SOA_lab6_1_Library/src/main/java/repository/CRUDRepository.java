@@ -1,7 +1,6 @@
 package repository;
 
 import java.util.List;
-import java.util.Map;
 
 public interface CRUDRepository<T> {
     T create(T c);
@@ -15,4 +14,6 @@ public interface CRUDRepository<T> {
     void delete(Class type, Object id);
 
     List<T> getWithCriteriaQuery(Class type, String parameter1, Object parameter2);
+
+    List<T> joinAndGetWithCriteriaQuery(Class type, List<String> joins, List<String> route, String parameter1, Object parameter2);
 }

@@ -37,6 +37,23 @@ public class Author {
     }
 
     @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if ( !(obj instanceof Author) ) return false;
+
+        final Author author = (Author) obj;
+
+        if ( !author.getName().equals( getName() ) ) return false;
+
+        return true;
+    }
+
+    @Override
     public String toString() {
         return "Author{" +
                 "id=" + id +
