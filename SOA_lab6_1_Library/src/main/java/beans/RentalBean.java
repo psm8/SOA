@@ -81,7 +81,7 @@ public class RentalBean {
     }
 
     public String rentBook(RentalBean rentalEntry){
-/*        try {*/
+        try {
             Rental rental = new Rental();
             Reader reader = new Reader();
 
@@ -90,14 +90,13 @@ public class RentalBean {
             reader.setName(rentalEntry.getName());
             reader.setSurname(rentalEntry.getSurname());
 
-            System.out.println(rentalEntry.getCatalog());
             rental.setCatalog(rentalEntry.getCatalog());
             rental.setReader(reader);
             rental.setDateOfRental(new Date());
             rental.setDateOfReturn(null);
 
             rentalRepository.create(rental);
-/*        } catch (Exception e){ return "rentCatalog.xhtml?faces-redirect=true";}*/
+        } catch (Exception e){ return "rentCatalog.xhtml?faces-redirect=true";}
 
         return "catalog.xhtml?faces-redirect=true";
     }
@@ -113,7 +112,13 @@ public class RentalBean {
         for(Rental rental : rentals){
             dates.add(rental.getDateOfRental());
         }
-        editRecord.setDateOfRental(Collections.max(dates));
+        Date date = Collections.max(dates);
+        List<Rental> rentalsReader =  rentalRepository.getWithCriteriaQuery(Rental.class, "dateOfRental", date);
+
+        editRecord.setDateOfRental(date);
+        editRecord.setName(rentalsReader.get(0).getReader().getName());
+        editRecord.setSurname(rentalsReader.get(0).getReader().getSurname());
+
         sessionMapObj.put("returnCatalogEntryObj", editRecord);
 
         return "/returnCatalogEntry.xhtml?faces-redirect=true";
@@ -124,7 +129,7 @@ public class RentalBean {
             Rental rental = new Rental();
             Reader reader = new Reader();
 
-            rental.getCatalog().setIsRented(false);
+            rentalEntry.getCatalog().setIsRented(false);
 
             reader.setName(rentalEntry.getName());
             reader.setSurname(rentalEntry.getSurname());

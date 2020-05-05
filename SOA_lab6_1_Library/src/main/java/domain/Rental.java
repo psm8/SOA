@@ -46,7 +46,7 @@ public class Rental {
         return catalog;
     }
 
-    public void setCatalog(Catalog catalof) {
+    public void setCatalog(Catalog catalog) {
         this.catalog = catalog;
     }
 

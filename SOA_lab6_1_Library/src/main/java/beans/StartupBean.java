@@ -60,11 +60,11 @@ public class StartupBean {
     }
 
     private Long getRandomIsbn(){
-        return 1000000000000L + (long) (999999999999L * Math.random());
+        return 1000000000000L + (long) (899999999999L * Math.random());
     }
 
     private Date[] getRandomDates(){
-        long msDateOfRental = 70L * 365 * 24 * 60 * 60 * 1000 + (long)(10L * 365 * 24 * 60 * 60 * 1000 * Math.random());
+        long msDateOfRental = 40L * 365 * 24 * 60 * 60 * 1000 + (long)(9L * 365 * 24 * 60 * 60 * 1000 * Math.random());
 
         if (Math.random() > 0.5){
             long msDateOfReturn = msDateOfRental + (long)(1L * 365 * 24 * 60 * 60 * 1000 * Math.random() + 1);
