@@ -3,8 +3,13 @@ package repository;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Stateless
 public class CRUDRepositoryImpl<T> implements CRUDRepository<T> {
@@ -41,8 +46,17 @@ public class CRUDRepositoryImpl<T> implements CRUDRepository<T> {
     }
 
     @Override
-    public void delete(Class type, Object id) {
-        Object ref = this.em.getReference(type, id);
-        this.em.remove(ref);
+    public void delete(Class type, Object obj) {
+        this.em.remove(em.contains(obj) ? obj : em.merge(obj));
+    }
+
+    @Override
+    public List<T> getWithCriteriaQuery(Class type, String parameter1, Object parameter2) {
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<T> query = cb.createQuery(type);
+        Root<T> hh = query.from(type);
+        query.select(hh)
+                .where(cb.equal(hh.get(parameter1), parameter2));
+        return em.createQuery(query).getResultList();
     }
 }

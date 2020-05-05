@@ -47,4 +47,13 @@ public class Catalog {
     public void setIsRented(Boolean isRented) {
         this.isRented = isRented;
     }
+
+    @Override
+    public String toString() {
+        return "Catalog{" +
+                "id=" + id +
+                ", book=" + book +
+                ", isRented=" + isRented +
+                '}';
+    }
 }

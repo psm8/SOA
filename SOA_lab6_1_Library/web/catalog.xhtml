@@ -51,16 +51,12 @@
                 <h:commandButton action="#{catalogEntryBean.updateCatalogEntryRedirect(catalogEntry)}" value="Update" class="btn btn-primary" />
             </h:column>
             <h:column>
-                <f:facet name="header">Delete</f:facet>
-                <h:commandButton action="#{catalogEntryBean.deleteStudentRecord(student.id)}" value="Delete" class="btn btn-danger" />
-            </h:column>
-            <h:column>
                 <f:facet name="header">Rent</f:facet>
-                <h:commandButton action="#{catalogEntryBean.deleteStudentRecord(student.id)}" value="Rent" class="btn btn-info" />
+                <h:commandButton action="#{rentalBean.rentBookRedirect(catalogEntry)}" value="Rent" rendered="#{not catalogEntry.isRented}" class="btn btn-info" />
             </h:column>
             <h:column>
                 <f:facet name="header">Return</f:facet>
-                <h:commandButton action="#{catalogEntryBean.deleteStudentRecord(student.id)}" value="Return" class="btn btn-warning" />
+                <h:commandButton action="#{rentalBean.returnBookRedirect(catalogEntry)}" value="Return" rendered="#{catalogEntry.isRented}" class="btn btn-warning" />
             </h:column>
         </h:dataTable>
         <center>

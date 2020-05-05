@@ -101,7 +101,6 @@ public class CatalogEntryBean {
 
     public String updateCatalogEntryRedirect(Catalog catalogEntry) {
         CatalogEntryBean editRecord = new CatalogEntryBean();
-        System.out.println("editStudentRecordInDB() : Ca Id: " + catalogEntry.getId());
 
         /* Setting The Particular Student Details In Session */
         Map<String,Object> sessionMapObj = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
@@ -142,8 +141,8 @@ public class CatalogEntryBean {
         return "catalog.xhtml?faces-redirect=true";
     }
 
-    public String deleteCatalogEntry() {
-        catalogRepository.get(Category.class, isbn);
+    public String deleteCatalogEntry(Catalog obj) {
+        catalogRepository.delete(Category.class, obj);
         return "catalog.xhtml?faces-redirect=true";
     }
 

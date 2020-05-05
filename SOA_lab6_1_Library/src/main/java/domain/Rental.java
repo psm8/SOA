@@ -11,10 +11,10 @@ public class Rental {
     @GeneratedValue
     @Column(name = "id", nullable = false)
     private Integer id;
-    @OneToOne(cascade = {CascadeType.ALL})
+    @ManyToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "catalog_id", nullable = false)
     private Catalog catalog;
-    @OneToOne(cascade = {CascadeType.ALL})
+    @ManyToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "reader_id", nullable = false)
     private Reader reader;
     @Temporal(TemporalType.TIMESTAMP)
@@ -46,7 +46,7 @@ public class Rental {
         return catalog;
     }
 
-    public void setCatalog(Book catalof) {
+    public void setCatalog(Catalog catalof) {
         this.catalog = catalog;
     }
 
