@@ -46,12 +46,12 @@ public class Book {
         this.author = author;
     }
 
-    public BookType getBookType() {
-        return bookType;
+    public String getBookType() {
+        return bookType.toString();
     }
 
-    public void setBookType(BookType bookType) {
-        this.bookType = bookType;
+    public void setBookType(String bookType) {
+        this.bookType = BookType.valueOf(bookType);
     }
 
     public double getPrice() {
@@ -62,12 +62,12 @@ public class Book {
         this.price = price;
     }
 
-    public Currency getCurrency() {
-        return currency;
+    public String getCurrency() {
+        return currency.toString();
     }
 
-    public void setCurrency(Currency currency) {
-        this.currency = currency;
+    public void setCurrency(String currency) {
+        this.currency = Currency.valueOf(currency);
     }
 
     public int getPageNo() {

@@ -33,9 +33,9 @@ public class BooksTableBean implements Serializable {
         double orderTotal = 0;
         if(selectedBooks != null) {
             for (Book book : selectedBooks) {
-                if (book.getCurrency().toString().equals("EUR")) {
+                if (book.getCurrency().equals("EUR")) {
                     orderTotal += book.getPrice() * 4.5;
-                } else if (book.getCurrency().toString().equals("USD")) {
+                } else if (book.getCurrency().equals("USD")) {
                     orderTotal += book.getPrice() * 4.0;
                 } else {
                     orderTotal += book.getPrice();
