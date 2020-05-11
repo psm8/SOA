@@ -43,6 +43,13 @@
         .black{
             color: black;
         }
+        .ui-datatable {
+            margin-bottom: 25px
+        }
+
+        .ui-datatable .ui-datatable-footer {
+            text-align:left;
+        }
     </style>
 
     <h:outputScript library = "js" name = "changeCurrency.js" />
@@ -92,7 +99,7 @@
                     <h:inputHidden id="costMin" value="#{filtersBean.costMin}" />
                     <h:inputHidden id="costMax" value="#{filtersBean.costMax}" />
                 </f:facet>
-                <h:outputText id="priceId" value="#{book.price}" />
+                <h:outputText id="priceId" value="#{book.price}" class="currency"/>
             </p:column>
             <p:column headerText="Waluta">
                 <f:facet name="header">
@@ -101,8 +108,8 @@
                         <f:selectItem itemLabel="Przeliczona" itemValue="true" />
                     </p:selectOneButton>
                 </f:facet>
-                <p:remoteCommand name="restoreCurrency" update="@(#booksForm)" style="display: none;" />
-                <h:outputText id="currencyId" value="${book.currency}" styleClass="black"/>
+                <p:remoteCommand name="restoreCurrency" update="@(.currency)" style="display: none;" />
+                <h:outputText id="currencyId" value="${book.currency}" styleClass="black" class="currency"/>
             </p:column>
             <p:column headerText="Ilość stron" filterBy="#{book.pageNo}" filterFunction="#{filtersBean.filterByPageNo}">
                 <f:facet name="filter">
@@ -117,8 +124,19 @@
                 </f:facet>
                 <h:outputText value="#{book.pageNo}" />
             </p:column>
+            <f:facet name="footer">
+                <p:commandButton process="books" update=":booksForm:bookDetail" icon="pi pi-search" value="Podsumowanie" oncomplete="PF('bookDialog').show()" />
+            </f:facet>
         </p:dataTable>
 
+        <p:dialog header="Selected Books" widgetVar="bookDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false" width="400">
+            <p:outputPanel id="bookDetail" style="text-align:center;">
+                <ui:repeat value="#{booksTableBean.selectedBooks}" var="book">
+                    <h:outputText value="#{book.name} - #{book.author} - #{book.price}#{book.currency} " style="display:block"/>
+                </ui:repeat>
+                <h:outputText value="Łącznie do zapłaty: #{booksTableBean.calculateOrderTotal()}"/>
+            </p:outputPanel>
+        </p:dialog>
     </h:form>
 </h:body>
 </html>

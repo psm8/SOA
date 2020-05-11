@@ -29,8 +29,20 @@ public class BooksTableBean implements Serializable {
         }
     }
 
-    public boolean calculatePricePLN(String currency){
-        return true;
+    public double calculateOrderTotal() {
+        double orderTotal = 0;
+        if(selectedBooks != null) {
+            for (Book book : selectedBooks) {
+                if (book.getCurrency().toString().equals("EUR")) {
+                    orderTotal += book.getPrice() * 4.5;
+                } else if (book.getCurrency().toString().equals("USD")) {
+                    orderTotal += book.getPrice() * 4.0;
+                } else {
+                    orderTotal += book.getPrice();
+                }
+            }
+        }
+        return orderTotal;
     }
 
     public BookType[] getBookTypes() {
