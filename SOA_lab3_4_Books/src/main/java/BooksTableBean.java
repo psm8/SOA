@@ -30,7 +30,7 @@ public class BooksTableBean implements Serializable {
     }
 
     public boolean calculatePricePLN(String currency){
-        return false;
+        return true;
     }
 
     public BookType[] getBookTypes() {

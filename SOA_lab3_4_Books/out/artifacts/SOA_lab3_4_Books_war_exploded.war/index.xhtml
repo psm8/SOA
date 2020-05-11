@@ -92,17 +92,17 @@
                     <h:inputHidden id="costMin" value="#{filtersBean.costMin}" />
                     <h:inputHidden id="costMax" value="#{filtersBean.costMax}" />
                 </f:facet>
-                <h:outputText value="#{book.price}" />
+                <h:outputText id="priceId" value="#{book.price}" />
             </p:column>
             <p:column headerText="Waluta">
                 <f:facet name="header">
-                    <p:selectOneButton onchange="changeCurrency('currencyId');" styleClass="custom-filter" widgetVar="selectCurrency">
+                    <p:selectOneButton onchange="changeCurrency('currencyId', 'priceId');" styleClass="custom-filter" widgetVar="selectCurrency">
                         <f:selectItem itemLabel="Orginalna" itemValue="false" />
                         <f:selectItem itemLabel="Przeliczona" itemValue="true" />
-                        <p:ajax event="change" update="idPrice" listener="#{booksTableBean.calculatePricePLN(book.currency)}" global="false"/>
                     </p:selectOneButton>
                 </f:facet>
-                <h:outputText id="currencyId" value="#{book.currency}" styleClass="black"/>
+                <p:remoteCommand name="restoreCurrency" update="@(#booksForm)" style="display: none;" />
+                <h:outputText id="currencyId" value="${book.currency}" styleClass="black"/>
             </p:column>
             <p:column headerText="Ilość stron" filterBy="#{book.pageNo}" filterFunction="#{filtersBean.filterByPageNo}">
                 <f:facet name="filter">
