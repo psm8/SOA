@@ -27,7 +27,7 @@
             box-sizing: border-box;
         }
         .ui-datatable-header {
-            height: 40px;
+            height: 50px;
         }
         .columnToggler {
             float:right;
@@ -67,7 +67,8 @@
                      rowSelectMode="checkbox"
                      emptyMessage="Nie znaleziono książek spełniających podane wymagania">
             <f:facet name="header">
-                <p:commandButton id="toggler" type="button" value="Kolumny" class="columnToggler" icon="pi pi-align-justify" />
+                Książki
+                <p:commandButton id="toggler" type="button" value="Columns" styleClass="columnToggler" icon="pi pi-align-justify" />
                 <p:columnToggler datasource="books" trigger="toggler" />
             </f:facet>
             <p:column selectionMode="multiple" styleClass="selectionColumn"/>
@@ -134,7 +135,7 @@
                 <ui:repeat value="#{booksTableBean.selectedBooks}" var="book">
                     <h:outputText value="#{book.name} - #{book.author} - #{book.price}#{book.currency} " style="display:block"/>
                 </ui:repeat>
-                <h:outputText value="Łącznie do zapłaty: #{booksTableBean.calculateOrderTotal()}"/>
+                <h:outputText value="Łącznie do zapłaty: #{booksTableBean.calculateOrderTotal()}PLN"/>
             </p:outputPanel>
         </p:dialog>
     </h:form>
