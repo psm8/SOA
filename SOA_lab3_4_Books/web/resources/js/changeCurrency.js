@@ -10,7 +10,6 @@ function changeCurrency(currencyColId, valueColId) {
                 $(this).removeClass('black');
                 $(this).addClass('red');
                 var currency = s.html();
-                var currency2 = s.html('PLN');
                 if(currency == 'EUR') {
                     $(valueCol.get(i)).html((4.5 * $(valueCol.get(i)).html()).toFixed(1));
                 } else if(currency == 'USD'){

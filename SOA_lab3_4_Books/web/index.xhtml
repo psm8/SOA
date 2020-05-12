@@ -53,6 +53,7 @@
     </style>
 
     <h:outputScript library = "js" name = "changeCurrency.js" />
+    <h:outputScript library = "js" name = "columnToggler.js" />
 
 </h:head>
 <h:body>
@@ -68,7 +69,7 @@
                      emptyMessage="Nie znaleziono książek spełniających podane wymagania">
             <f:facet name="header">
                 Książki
-                <p:commandButton id="toggler" type="button" value="Columns" styleClass="columnToggler" icon="pi pi-align-justify" />
+                <p:commandButton onclick="fixColumnTogglerLabel()" id="toggler" type="button" value="Kolumny" styleClass="columnToggler" icon="pi pi-align-justify" />
                 <p:columnToggler datasource="books" trigger="toggler" />
             </f:facet>
             <p:column selectionMode="multiple" styleClass="selectionColumn"/>
@@ -130,7 +131,7 @@
             </f:facet>
         </p:dataTable>
 
-        <p:dialog header="Selected Books" widgetVar="bookDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false" width="400">
+        <p:dialog header="Wybrane ksiązki" widgetVar="bookDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false" width="400">
             <p:outputPanel id="bookDetail" style="text-align:center;">
                 <ui:repeat value="#{booksTableBean.selectedBooks}" var="book">
                     <h:outputText value="#{book.name} - #{book.author} - #{book.price}#{book.currency} " style="display:block"/>
