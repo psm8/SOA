@@ -1,33 +1,51 @@
 package model;
 
-import model.enumeration.BookType;
-import model.enumeration.Currency;
+import javax.persistence.*;
 
+@Entity
+@Table(name = "book")
 public class Book {
-    private int id;
+
+    @Id
+    @Column(name = "isbn", nullable = false, length = 13)
+    private Long isbn;
+    @Column(name = "title", nullable = false)
+    private String title;
+    @Column(name="name", nullable = false)
     private String name;
-    private String author;
-    private BookType bookType;
-    private double price;
-    private Currency currency;
-    private int pageNo;
+    @Column(name="surname", nullable = false)
+    private String surname;
+    @Column(name="year", nullable = false)
+    private Integer year;;
+    @Column(name="price", nullable = false)
+    private Double price;
 
-    public Book(int id, String name, String author, BookType bookType, double price, Currency currency, int pageNo) {
-        this.id = id;
+    public Book() {
+    }
+
+    public Book(Long isbn, String title, String name, String surname, Integer year, Double price) {
+        this.isbn = isbn;
+        this.title = title;
         this.name = name;
-        this.author = author;
-        this.bookType = bookType;
+        this.surname = surname;
+        this.year = year;
         this.price = price;
-        this.currency = currency;
-        this.pageNo = pageNo;
     }
 
-    public int getId() {
-        return id;
+    public Long getIsbn() {
+        return isbn;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setIsbn(Long isbn) {
+        this.isbn = isbn;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getName() {
@@ -38,43 +56,27 @@ public class Book {
         this.name = name;
     }
 
-    public String getAuthor() {
-        return author;
+    public String getSurname() {
+        return surname;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
+    public void setSurname(String surname) {
+        this.surname = surname;
     }
 
-    public String getBookType() {
-        return bookType.toString();
+    public Integer getYear() {
+        return year;
     }
 
-    public void setBookType(String bookType) {
-        this.bookType = BookType.valueOf(bookType);
+    public void setYear(Integer year) {
+        this.year = year;
     }
 
-    public double getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(Double price) {
         this.price = price;
-    }
-
-    public String getCurrency() {
-        return currency.toString();
-    }
-
-    public void setCurrency(String currency) {
-        this.currency = Currency.valueOf(currency);
-    }
-
-    public int getPageNo() {
-        return pageNo;
-    }
-
-    public void setPageNo(int pageNo) {
-        this.pageNo = pageNo;
     }
 }
