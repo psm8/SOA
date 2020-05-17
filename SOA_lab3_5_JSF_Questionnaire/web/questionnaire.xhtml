@@ -28,7 +28,8 @@
     <div class="form-group">
       <h:outputLabel for="name" class="control-label col-sm-4">Name:</h:outputLabel>
       <div class="col-sm-4">
-        <h:inputText id="name" value="#{questionnaireBean.name}" class="form-control" validatorMessage="Name is required">
+        <h:inputText id="name" value="#{questionnaireBean.name}" class="form-control"
+                     validatorMessage="Name is required">
           <f:validateRequired/>
         </h:inputText>
         <h:message for="name" style="color:red" />
@@ -37,53 +38,53 @@
     <div class="form-group">
       <h:outputLabel for="surname" class="control-label col-sm-4">Email:</h:outputLabel>
       <div class="col-sm-4">
-        <h:inputText id="email-id" value="#{questionnaireBean.email}" class="form-control" validatorMessage="Surname is required">
+        <h:inputText id="email-id" value="#{questionnaireBean.email}" class="form-control"
+                     validatorMessage="#{questionnaireBean.email} is not valid">
           <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
           <f:validateRequired/>
         </h:inputText>
-        <h:message for="email-id" style="color:red" />
+        <h:message for="email" style="color:red" />
       </div>
     </div>
     <div class="form-group">
       <h:outputLabel for="age" class="control-label col-sm-4">Age:</h:outputLabel>
       <div class="col-sm-4">
-        <h:inputText id="year-id" value="#{questionnaireBean.age}" class="form-control" validatorMessage="Year is required">
+        <h:inputText id="age" value="#{questionnaireBean.age}" class="form-control"
+                     validatorMessage="Age must be between 10 and 100">
           <f:validateLongRange minimum = "10" maximum = "100" />
           <f:validateRequired/>
         </h:inputText>
-        <h:message for="year-id" style="color:red" />
+        <h:message for="age" style="color:red" />
       </div>
     </div>
     <div class="form-group">
-      <h:outputLabel for="height" class="control-label col-sm-4">Height:</h:outputLabel>
+      <h:outputLabel for="sex" class="control-label col-sm-4">Sex:</h:outputLabel>
       <div class="col-sm-4">
-        <h:inputText id="height-id" value="#{questionnaireBean.height}" class="form-control" validatorMessage="Year is required">
-          <f:validateLongRange minimum = "10" maximum = "100" />
-          <f:validateRequired/>
-        </h:inputText>
-        <h:message for="year-id" style="color:red" />
-      </div>
-    </div>
-    <div class="form-group">
-      <h:outputLabel for="price" class="control-label col-sm-4">Sex:</h:outputLabel>
-      <div class="col-sm-4">
-        <h:selectOneRadio id="category-id" value="#{questionnaireBean.sex}" class="form-control" validatorMessage="Sex is required">
+        <h:selectOneRadio id="sex" value="#{questionnaireBean.sex}" class="form-control">
           <f:selectItem itemValue = "female" itemLabel = "female" />
           <f:selectItem itemValue = "male" itemLabel = "male" />
-          <f:validateRequired/>
-          <f:ajax render="results" />
+          <f:ajax render="datails" />
         </h:selectOneRadio>
-        <h:message for="category-id" style="color:red" />
       </div>
     </div>
     <h:panelGroup id="results">
       <h:panelGroup rendered="#{questionnaireBean.sex eq 'female'}">
-        <ui:include src="components/maleAdditionalComponent.xhtml" />
+        <ui:include src="components/femaleDetailsComponent.xhtml" />
       </h:panelGroup>
       <h:panelGroup rendered="#{questionnaireBean.sex eq 'male'}">
-        <ui:include src="components/femaleAdditionalComponent.xhtml" />
+        <ui:include src="components/maleDetailsComponent.xhtml" />
       </h:panelGroup>
     </h:panelGroup>
+    <div class="form-group">
+      <h:outputLabel for="height" class="control-label col-sm-4">Height:</h:outputLabel>
+      <div class="col-sm-4">
+        <h:inputText id="height" value="#{questionnaireBean.height}" class="form-control"
+                     validatorMessage="Height must be between 10 and 100">
+          <f:validateLongRange minimum = "10" maximum = "100" />
+        </h:inputText>
+        <h:message for="height" style="color:red" />
+      </div>
+    </div>
     <div class="form-group">
       <div class="col-sm-4"></div>
       <div class="col-sm-4">
