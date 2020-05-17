@@ -36,9 +36,9 @@
       </div>
     </div>
     <div class="form-group">
-      <h:outputLabel for="surname" class="control-label col-sm-4">Email:</h:outputLabel>
+      <h:outputLabel for="email" class="control-label col-sm-4">Email:</h:outputLabel>
       <div class="col-sm-4">
-        <h:inputText id="email-id" value="#{questionnaireBean.email}" class="form-control"
+        <h:inputText id="email" value="#{questionnaireBean.email}" class="form-control"
                      validatorMessage="#{questionnaireBean.email} is not valid">
           <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
           <f:validateRequired/>
@@ -60,14 +60,16 @@
     <div class="form-group">
       <h:outputLabel for="sex" class="control-label col-sm-4">Sex:</h:outputLabel>
       <div class="col-sm-4">
-        <h:selectOneRadio id="sex" value="#{questionnaireBean.sex}" class="form-control">
+        <h:selectOneRadio id="sex" value="#{questionnaireBean.sex}" class="form-control"
+                          validatorMessage="Please enter your sex">
           <f:selectItem itemValue = "female" itemLabel = "female" />
           <f:selectItem itemValue = "male" itemLabel = "male" />
-          <f:ajax render="datails" />
+          <f:ajax render="details" />
+          <f:validateRequired/>
         </h:selectOneRadio>
       </div>
     </div>
-    <h:panelGroup id="results">
+    <h:panelGroup id="details">
       <h:panelGroup rendered="#{questionnaireBean.sex eq 'female'}">
         <ui:include src="components/femaleDetailsComponent.xhtml" />
       </h:panelGroup>
