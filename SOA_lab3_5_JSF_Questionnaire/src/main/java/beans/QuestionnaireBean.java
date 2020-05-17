@@ -1,7 +1,5 @@
 package beans;
 
-import model.FemaleSpecificResponses;
-import model.MaleSpecificResponses;
 import model.Responses;
 
 import javax.annotation.PostConstruct;

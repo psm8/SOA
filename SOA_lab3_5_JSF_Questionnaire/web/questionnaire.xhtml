@@ -16,6 +16,29 @@
     .btnWidth {
       width: 80px;
     }
+
+    .img-ad {
+      height: 80%;
+      background: teal;
+      color: rgba(0, 0, 0, 0.54);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: Helvetica;
+      font-weight: bolder;
+      font-size: 30px;
+    }
+
+    .txt-ad {
+      height: 20%;
+      background: tomato;
+      color: rgba(0, 0, 0, 0.54);
+      font-family: Helvetica;
+      font-weight: bold;
+      box-sizing: border-box;
+      padding: 24px;
+      text-align: center;
+    }
   </style>
 </h:head>
 <h:body>
@@ -118,5 +141,6 @@
       </div>
     </div>
   </h:form>
+  <ui:include src="components/adComponent.xhtml" />
 </h:body>
 </html>

@@ -37,4 +37,12 @@ public class FemaleSpecificResponses {
     public void setHipsSize(Integer hipsSize) {
         this.hipsSize = hipsSize;
     }
+
+    @Override
+    public String toString() {
+        return "braSize=" + braSize +
+                ", cupSize=" + cupSize +
+                ", waistFemaleSize=" + waistFemaleSize +
+                ", hipsSize=" + hipsSize;
+    }
 }

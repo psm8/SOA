@@ -19,4 +19,10 @@ public class MaleSpecificResponses {
     public void setWaistMaleSize(Integer waistMaleSize) {
         this.waistMaleSize = waistMaleSize;
     }
+
+    @Override
+    public String toString() {
+        return "chestSize=" + chestSize +
+                ", waistMaleSize=" + waistMaleSize;
+    }
 }

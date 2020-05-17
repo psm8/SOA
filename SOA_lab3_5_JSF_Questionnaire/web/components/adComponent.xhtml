@@ -1,0 +1,25 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+
+    <h:form id="adForm" class="form-horizontal">
+        <div class="txt-ad">
+        <h:outputText value="#{adViewBean.randomAdAndClick.title}"/>
+        </div>
+        <div class="img-ad">
+        <h:commandLink action="#{adViewBean.onClick}" target="_blank">
+            <p:ajax event="click" update=":adForm:clicks"/>
+            <h:graphicImage value="#{adViewBean.randomAdAndClick.image}" width="200">
+            </h:graphicImage>
+        </h:commandLink>
+        </div>
+        <!--test if counter works-->
+        <div class="txt-ad">
+            <h:outputText id="clicks" value="#{adViewBean.randomAdAndClick.clicks}"/>
+        </div>
+    </h:form>
+
+</ui:composition>

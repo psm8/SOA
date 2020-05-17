@@ -16,6 +16,29 @@
         .btnWidth {
             width: 80px;
         }
+
+        .img-ad {
+            height: 80%;
+            background: teal;
+            color: rgba(0, 0, 0, 0.54);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: Helvetica;
+            font-weight: bolder;
+            font-size: 30px;
+        }
+
+        .txt-ad {
+            height: 20%;
+            background: tomato;
+            color: rgba(0, 0, 0, 0.54);
+            font-family: Helvetica;
+            font-weight: bold;
+            box-sizing: border-box;
+            padding: 24px;
+            text-align: center;
+        }
     </style>
 </h:head>
 <h:body>
@@ -101,14 +124,7 @@
             </div>
         </div>
 
-        <p:dialog header="Wybrane ksiązki" widgetVar="bookDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false" width="400">
-            <p:outputPanel id="bookDetail" style="text-align:center;">
-                <ui:repeat value="#{booksTableBean.selectedBooks}" var="book">
-                    <h:outputText value="#{book.name} - #{book.author} - #{book.price}#{book.currency} " style="display:block"/>
-                </ui:repeat>
-                <h:outputText value="Łącznie do zapłaty: #{booksTableBean.calculateOrderTotal()}PLN"/>
-            </p:outputPanel>
-        </p:dialog>
+        <ui:include src="components/adComponent.xhtml" />
     </h:form>
 </h:body>
 </html>

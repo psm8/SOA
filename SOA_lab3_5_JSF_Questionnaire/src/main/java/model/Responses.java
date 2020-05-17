@@ -114,4 +114,22 @@ public class Responses {
     public void setTypePreferred(String typePreferred) {
         this.typePreferred = typePreferred;
     }
+
+    @Override
+    public String toString() {
+        return "Twoje odpowidzi:" +
+                "name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", age=" + age +
+                ", sex='" + sex + '\'' +
+                "," + femaleSpecificResponses +
+                "," + maleSpecificResponses +
+                ", education='" + education + '\'' +
+                ", height=" + height +
+                ", moneySpend='" + moneySpend + '\'' +
+                ", shoppingFrequency='" + shoppingFrequency + '\'' +
+                ", colorPreferred='" + colorPreferred + '\'' +
+                ", typePreferred='" + typePreferred + '\'' +
+                '}';
+    }
 }
