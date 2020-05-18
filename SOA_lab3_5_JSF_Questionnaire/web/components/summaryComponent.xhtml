@@ -3,8 +3,9 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui">
 
-    <p:dialog header="Twoje odpowidzi:" widgetVar="summaryDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false" width="400">
-        <p:outputPanel style="text-align:center;">
+    <p:dialog id="summaryDialog" header="Twoje odpowidzi:" widgetVar="summaryDialog" modal="true"
+              showEffect="fade" hideEffect="fade" resizable="false" width="400">
+        <p:outputPanel id="summary" style="text-align:center;">
             <h:outputText value="#{questionnaireBean.responses.toString()}"/>
             <h:outputText value="Dziękujemy za udział w ankiecie"/>
         </p:outputPanel>

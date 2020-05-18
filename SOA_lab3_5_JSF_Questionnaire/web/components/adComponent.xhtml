@@ -11,8 +11,8 @@
         </div>
         <div class="img-ad">
         <h:commandLink action="#{adViewBean.onClick}" target="_blank">
-            <p:ajax event="click" update=":adForm:clicks"/>
             <h:graphicImage value="#{adViewBean.randomAdAndClick.image}" width="200">
+                <f:ajax event="click" delay="500" render=":adForm"/>
             </h:graphicImage>
         </h:commandLink>
         </div>

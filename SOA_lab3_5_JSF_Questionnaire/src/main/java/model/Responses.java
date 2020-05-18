@@ -1,6 +1,8 @@
 package model;
 
 
+import java.util.List;
+
 public class Responses {
     private String name;
     private String email;
@@ -12,8 +14,8 @@ public class Responses {
     private Integer height;
     private String moneySpend;
     private String shoppingFrequency;
-    private String colorPreferred;
-    private String typePreferred;
+    private List<String> colorPreferred;
+    private List<String> typePreferred;
 
     public String getName() {
         return name;
@@ -99,19 +101,19 @@ public class Responses {
         this.shoppingFrequency = shoppingFrequency;
     }
 
-    public String getColorPreferred() {
+    public List<String> getColorPreferred() {
         return colorPreferred;
     }
 
-    public void setColorPreferred(String colorPreferred) {
+    public void setColorPreferred(List<String> colorPreferred) {
         this.colorPreferred = colorPreferred;
     }
 
-    public String getTypePreferred() {
+    public List<String> getTypePreferred() {
         return typePreferred;
     }
 
-    public void setTypePreferred(String typePreferred) {
+    public void setTypePreferred(List<String> typePreferred) {
         this.typePreferred = typePreferred;
     }
 
@@ -129,7 +131,6 @@ public class Responses {
                 ", moneySpend='" + moneySpend + '\'' +
                 ", shoppingFrequency='" + shoppingFrequency + '\'' +
                 ", colorPreferred='" + colorPreferred + '\'' +
-                ", typePreferred='" + typePreferred + '\'' +
-                '}';
+                ", typePreferred='" + typePreferred;
     }
 }

@@ -51,10 +51,10 @@
         </div>
         <hr/>
         <div class="form-group">
-            <h:outputLabel class="control-label col-sm-4">
+            <h:outputLabel for="q1" class="control-label col-sm-4">
                 Ile jesteś w stanie przeznaczyc miesięcznie na zakup ubrania?</h:outputLabel>
             <div class="col-sm-4">
-                <h:selectOneMenu value = "#{questionnaireBean.responses.moneySpend}">
+                <h:selectOneMenu id="q1" value = "#{questionnaireBean.responses.moneySpend}">
                     <f:selectItem itemValue = "do 100 zł" itemLabel = "do 100 zł" />
                     <f:selectItem itemValue = "100-500 zł" itemLabel = "100-500 zl" />
                     <f:selectItem itemValue = "500-1000 zł" itemLabel = "500-1000 zl" />
@@ -118,13 +118,13 @@
                 </div>
                 <div class="col-sm-1"></div>
                 <div class="col-sm-2">
-                    <h:commandButton value="Next" action="questionnaire2.xhtml?faces-redirect=true"
-                                     class="btn btn-success btnWidth" />
+                    <p:commandButton process="qustionnaireForm" update="summaryDialog" icon="pi pi-search"
+                                     value="Finish" oncomplete="PF('summaryDialog').show()" type="submit"/>
                 </div>
             </div>
         </div>
-
-        <ui:include src="components/adComponent.xhtml" />
+        <ui:include src="components/summaryComponent.xhtml" />
     </h:form>
+    <ui:include src="components/adComponent.xhtml" />
 </h:body>
 </html>
