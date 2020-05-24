@@ -1,10 +1,11 @@
 package repository;
 
-import org.hibernate.exception.ConstraintViolationException;
+import org.jboss.logging.Logger;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @Stateless
 public class CRUDRepositoryImpl<T> implements CRUDRepository<T>, Serializable {
+    private static final Logger log = Logger.getLogger(CRUDRepository.class.getPackage().getName());
 
     @PersistenceContext(unitName = "SOA_lab6_1_Library")
     EntityManager em;
@@ -24,7 +26,9 @@ public class CRUDRepositoryImpl<T> implements CRUDRepository<T>, Serializable {
     public T create(T obj) {
         try {
             em.persist(obj);
-        } catch (Exception e){e.getMessage();}
+        } catch (PersistenceException e){
+            log.error((e.getMessage()));
+        }
         return obj;
     }
 
