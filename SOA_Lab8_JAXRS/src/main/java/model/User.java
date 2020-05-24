@@ -12,18 +12,28 @@ public class User {
     @GeneratedValue
     @Column(name="id", nullable = false)
     private Integer id;
-    @Column(name="id", nullable = false)
+    @Column(name="name", nullable = false)
     private String name;
     @Column(name = "age", nullable = false)
     private Integer age;
     @Lob @Basic(fetch=LAZY)
     @Column(name="avatar", columnDefinition="BLOB NOT NULL")
-    protected byte[] avatar;
-    @ManyToMany
+    private byte[] avatar;
+    @ManyToMany(cascade=CascadeType.ALL)
     @JoinTable(name="user_movie",
             joinColumns=@JoinColumn(name="user_id"),
             inverseJoinColumns=@JoinColumn(name="movie_id"))
     private List<Movie> movies;
+
+    public User() {
+    }
+
+    public User(String name, Integer age, byte[] avatar, List<Movie> movies) {
+        this.name = name;
+        this.age = age;
+        this.avatar = avatar;
+        this.movies = movies;
+    }
 
     public Integer getId() {
         return id;

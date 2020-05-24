@@ -3,6 +3,8 @@ package web.rest;
 import model.Movie;
 import repository.CRUDRepository;
 
+
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -10,20 +12,24 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 
 @Path("/movie")
+@RequestScoped
 public class MovieResource {
 
     @Inject
     private CRUDRepository<Movie> movieCRUDRepository;
 
+    public MovieResource(){
+    }
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAll() {
-        List<Movie> entity = movieCRUDRepository.getAll(Movie.class);
-        if(entity == null) {
+        List<Movie> entities = movieCRUDRepository.getAll(Movie.class);
+        if(entities == null || entities.isEmpty()) {
             return Response.status(Response.Status.NOT_FOUND).entity("Entity not found").build();
         }
 
-        return Response.ok(entity).build();
+        return Response.ok(entities).build();
     }
 
     @GET
@@ -39,6 +45,21 @@ public class MovieResource {
         }
 
         return Response.ok(entity).build();
+    }
+
+    @GET
+    @Path("/{title}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response get(@PathParam("title") final String title) {
+        if(title == null) {
+            return Response.serverError().entity("ID cannot be blank").build();
+        }
+        List<Movie> entities = movieCRUDRepository.getByField(Movie.class , "title", title);
+        if(entities == null || entities.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND).entity("Entity not found for title: " + title).build();
+        }
+
+        return Response.ok(entities).build();
     }
 
     @POST
@@ -85,6 +106,8 @@ public class MovieResource {
         if(movie.getId() != null){ entity.setId(movie.getId());}
         if(movie.getTitle() != null){ entity.setTitle(movie.getTitle());}
         if(movie.getUrl() != null){ entity.setUrl(movie.getUrl());}
+
+        movieCRUDRepository.update(entity);
 
         return Response.ok(entity).build();
     }

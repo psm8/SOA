@@ -16,6 +16,14 @@ public class Movie {
     @Column(name = "url", nullable = false)
     private String url;
 
+    public Movie() {
+    }
+
+    public Movie(String title, String url) {
+        this.title = title;
+        this.url = url;
+    }
+
     public Integer getId() {
         return id;
     }

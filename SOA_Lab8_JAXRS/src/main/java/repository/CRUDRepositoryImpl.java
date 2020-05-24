@@ -32,6 +32,16 @@ public class CRUDRepositoryImpl<T> implements CRUDRepository<T>, Serializable {
     }
 
     @Override
+    public List<T> getByField(Class type, String fieldName, Object value) {
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<T> query = cb.createQuery(type);
+        Root<T> hh = query.from(type);
+        query.select(hh)
+                .where(cb.equal(hh.get(fieldName), value));
+        return em.createQuery(query).getResultList();
+    }
+
+    @Override
     public List<T> getAll(Class type) {
         CriteriaQuery<T> cq = em.getCriteriaBuilder().createQuery(type);
         cq.select(cq.from(type));
