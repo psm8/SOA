@@ -1,11 +1,12 @@
 package repository;
 
+import org.hibernate.exception.ConstraintViolationException;
+
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Root;
 import java.io.Serializable;
 import java.util.List;
@@ -21,7 +22,9 @@ public class CRUDRepositoryImpl<T> implements CRUDRepository<T>, Serializable {
 
     @Override
     public T create(T obj) {
-        em.merge(obj);
+        try {
+            em.persist(obj);
+        } catch (Exception e){e.getMessage();}
         return obj;
     }
 
