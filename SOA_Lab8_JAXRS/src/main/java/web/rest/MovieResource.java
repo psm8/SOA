@@ -40,6 +40,7 @@ public class MovieResource {
         if(entities == null || entities.isEmpty()) {
             return Response.status(Response.Status.NOT_FOUND).entity("Entity not found").build();
         }
+
         return Response.ok(entities.stream().map(Movie::getUrl).collect(Collectors.toList())).build();
     }
 
