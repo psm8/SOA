@@ -10,6 +10,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Path("/movie")
 @RequestScoped
@@ -30,6 +31,16 @@ public class MovieResource {
         }
 
         return Response.ok(entities).build();
+    }
+
+    @GET
+    @Produces("text/uri-list")
+    public Response getAllAsUriList(){
+        List<Movie> entities = movieCRUDRepository.getAll(Movie.class);
+        if(entities == null || entities.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND).entity("Entity not found").build();
+        }
+        return Response.ok(entities.stream().map(Movie::getUrl).collect(Collectors.toList())).build();
     }
 
     @GET

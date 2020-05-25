@@ -2,6 +2,7 @@ package beans;
 
 import model.Movie;
 import model.User;
+import org.apache.commons.io.IOUtils;
 import repository.CRUDRepository;
 
 import javax.ejb.Singleton;
@@ -11,7 +12,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Singleton
 public class CreateRandomForStartupBean {
@@ -32,10 +32,6 @@ public class CreateRandomForStartupBean {
 
     @Transactional(value = Transactional.TxType.REQUIRES_NEW)
     public Movie createRandomMovie(){
-/*        Optional<Movie> movie = movieCRUDRepository.getByField()
-        if (!customer.isPresent()) {
-            customerRepository.save(new Customer("John", "Doe"));
-        }*/
         return movieCRUDRepository.create(new Movie(getRandomName("title"), getRandomName("uri")));
     }
 
@@ -58,7 +54,7 @@ public class CreateRandomForStartupBean {
                 getClass().getClassLoader().getResourceAsStream("config/fake-data/avatar"
                         + (int) (1 + 5 * Math.random())+".png");
 
-        return inputStream.readAllBytes();
+        return IOUtils.toByteArray(inputStream);
     }
 
     private List<Movie> getRandomMovies(List<Movie> movies){

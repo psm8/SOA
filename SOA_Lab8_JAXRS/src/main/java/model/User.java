@@ -3,6 +3,7 @@ package model;
 import javax.persistence.*;
 import java.util.List;
 
+import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 
 @Entity
@@ -19,7 +20,7 @@ public class User {
     @Lob @Basic(fetch=LAZY)
     @Column(name="avatar", columnDefinition="BLOB NOT NULL")
     private byte[] avatar;
-    @ManyToMany(cascade=CascadeType.ALL)
+    @ManyToMany(cascade=CascadeType.MERGE, fetch = EAGER)
     @JoinTable(name="user_movie",
             joinColumns=@JoinColumn(name="user_id"),
             inverseJoinColumns=@JoinColumn(name="movie_id"))
