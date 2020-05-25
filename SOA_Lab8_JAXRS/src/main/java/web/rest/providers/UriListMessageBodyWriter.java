@@ -10,7 +10,6 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 
 @Provider
@@ -23,7 +22,7 @@ public class UriListMessageBodyWriter implements MessageBodyWriter<List<Object>>
 
     @Override
     public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
-        return type == ArrayList.class;
+        return List.class.isAssignableFrom(type);
     }
 
     @Override

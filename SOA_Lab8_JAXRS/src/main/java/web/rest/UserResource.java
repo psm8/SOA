@@ -1,6 +1,5 @@
 package web.rest;
 
-import model.Movie;
 import model.User;
 import repository.CRUDRepository;
 

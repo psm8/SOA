@@ -14,7 +14,7 @@ public class OsobyRedirectController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response redirect() throws URISyntaxException {
 
-        URI uri = new URI("Users");
+        URI uri = new URI("user");
         return Response.status(308).location(uri).build();
     }
 }

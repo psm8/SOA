@@ -45,6 +45,17 @@ public class MovieResource {
     }
 
     @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response getAllAsTextPlain(){
+        List<Movie> entities = movieCRUDRepository.getAll(Movie.class);
+        if(entities == null || entities.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND).entity("Entity not found").build();
+        }
+
+        return Response.ok(entities).build();
+    }
+
+    @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response get(@PathParam("id") final Integer id) {
