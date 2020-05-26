@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:o="http://omnifaces.org/ui">
+<ui:composition template="/templates/layout.xhtml">
+  <ui:define name="content">
+  
+    <f:metadata>
+      <f:viewParam name="id" value="#{userBean.user}" converter="#{genericEntityConverter}" />
+    </f:metadata>
+    
+    <p:outputPanel id="userEditPanel">
+        <h:form id="editUserForm">
+			<p:outputPanel styleClass="ui-fluid">
+
+				<p:panelGrid columns="3" columnClasses="ui-grid-col-4,ui-grid-col-6,ui-grid-col-2" layout="grid" style="max-width:400px">
+				
+					<h:outputLabel value="Id:" for="idEditInput" />
+					<p:inputText value="#{userBean.user.id}"  id="idEditInput" 
+						label="Id" />
+					<p:message for="idEditInput" display="icon" />
+
+					<h:outputLabel value="Name:" for="nameEditInput" />
+					<p:inputText value="#{userBean.user.name}" id="nameEditInput" 
+						label="Name" />
+					<p:message for="nameEditInput" display="icon" />
+
+					<h:outputLabel value="Age:" for="ageEditInput" />
+					<p:inputText value="#{userBean.user.age}"  id="ageEditInput" 
+						label="Age" />
+					<p:message for="ageEditInput" display="icon" />
+
+					<h:outputLabel value="Avatar:" for="avatarEditInput" />
+					<p:inputText value="#{userBean.user.avatar}" id="avatarEditInput" 
+						label="Avatar" />
+					<p:message for="avatarEditInput" display="icon" />
+					
+				</p:panelGrid>
+
+			</p:outputPanel>
+            <div style="margin:10px">
+                <p:commandButton value="Save" icon="ui-icon-disk" actionListener="#{userBean.persist}"
+                        action="/pages/user/user?faces-redirect=true" update=":userEditPanel :growlForm:growl" />
+                <p:commandButton value="Cancel" icon="ui-icon-close"
+                        action="/pages/user/user?faces-redirect=true" immediate="true" />
+            </div>
+        </h:form>
+    </p:outputPanel>
+    
+  </ui:define>
+  
+</ui:composition>
+</html>

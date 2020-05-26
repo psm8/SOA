@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:o="http://omnifaces.org/ui">
+<ui:composition template="/templates/layout.xhtml">
+  <ui:define name="content">
+
+    <h:form prependId="false" id="userDataForm">
+
+        <p:dataTable id="userTable" value="#{userBean.userList}" var="user" resizableColumns="true" paginator="true"
+                paginatorTemplate=" {CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                rowsPerPageTemplate="5,10,25,50" rows="10" draggableColumns="true"
+                paginatorPosition="bottom" widgetVar="userTable" emptyMessage="No records found."
+                reflow="true">
+        
+          <f:facet name="header" >
+
+              <p:commandButton value="Create New User" icon="ui-icon-plusthick"
+                      action="/pages/user/userCreate?faces-redirect=true"
+                      style="float:left" />
+              
+              <p:commandButton id="toggler" type="button" value="Select Columns" icon="ui-icon-calculator" />
+              <p:columnToggler datasource="userTable" trigger="toggler" />
+          </f:facet>
+          
+          <p:column headerText="Id" sortBy="#{user.id}" filterBy="#{user.id}">
+            <f:facet name="filter">
+                <p:inputText id="idFilter"
+                        onkeypress="if (event.keyCode == 13) {PF('userTable').filter(); updateIdFilter(); return false; }" >
+                    <p:remoteCommand name="updateIdFilter" update="userTable:idFilter" />
+                    <f:convertNumber integerOnly="true" />
+                </p:inputText>
+            </f:facet>
+            <h:outputText value="#{user.id}" ><f:convertNumber /></h:outputText>
+          </p:column>
+
+          <p:column headerText="Name" sortBy="#{user.name}" filterBy="#{user.name}">
+            <f:facet name="filter">
+                <p:inputText id="nameFilter"
+                        onkeypress="if (event.keyCode == 13) {PF('userTable').filter(); updateNameFilter(); return false; }" >
+                    <p:remoteCommand name="updateNameFilter" update="userTable:nameFilter" />
+                </p:inputText>
+            </f:facet>
+            <h:outputText value="#{user.name}" />
+          </p:column>
+
+          <p:column headerText="Age" sortBy="#{user.age}" filterBy="#{user.age}">
+            <f:facet name="filter">
+                <p:inputText id="ageFilter"
+                        onkeypress="if (event.keyCode == 13) {PF('userTable').filter(); updateAgeFilter(); return false; }" >
+                    <p:remoteCommand name="updateAgeFilter" update="userTable:ageFilter" />
+                    <f:convertNumber integerOnly="true" />
+                </p:inputText>
+            </f:facet>
+            <h:outputText value="#{user.age}" ><f:convertNumber /></h:outputText>
+          </p:column>
+
+          <p:column headerText="Avatar" sortBy="#{user.avatar}" filterBy="#{user.avatar}">
+            <f:facet name="filter">
+                <p:inputText id="avatarFilter"
+                        onkeypress="if (event.keyCode == 13) {PF('userTable').filter(); updateAvatarFilter(); return false; }" >
+                    <p:remoteCommand name="updateAvatarFilter" update="userTable:avatarFilter" />
+                </p:inputText>
+            </f:facet>
+            <h:outputText value="#{user.avatar}" />
+          </p:column>
+
+          <p:column headerText="Usermovie" styleClass="action-column" exportable="false">
+            
+            <p:commandButton icon="ui-icon-transfer-e-w"  title="Usermovie" action="#{'/pages/user/userUsermovie?faces-redirect=true&amp;id='.concat(user.id)}" />
+            
+          </p:column>
+
+          <p:column styleClass="action-column" headerText="Actions" width="115" exportable="false">
+            
+            <p:commandButton action="#{'/pages/user/userView?faces-redirect=true&amp;id='.concat(user.id)}"
+                icon="ui-icon-zoomin"
+                title="View" />
+            
+            <p:commandButton action="#{'/pages/user/userEdit?faces-redirect=true&amp;id='.concat(user.id)}"
+                icon="ui-icon-pencil"
+                resetValues="true"
+                title="Edit" />
+                
+            <p:commandButton icon="ui-icon-close" 
+                oncomplete="PF('deleteUserDialogWidget').show()"
+                title="Delete" >
+                <f:setPropertyActionListener value="#{user}"
+                    target="#{userBean.user}" />
+            </p:commandButton>
+    
+          </p:column>
+          
+        </p:dataTable>
+        
+    </h:form>
+
+    <p:confirmDialog id="deleteUserDialog" widgetVar="deleteUserDialogWidget"
+        header="Confirm Deletion"
+        severity="alarm">
+        <f:facet name="message"><h:outputText value="Are you sure you want to delete this record?" escape="false"/></f:facet>
+        <p:outputPanel>
+          <h:form>
+            <div style="text-align: center; margin:10px">
+              <p:commandButton value="Delete" action="#{userBean.delete}" update="@all" oncomplete="PF('deleteUserDialogWidget').hide()" />
+              <p:commandButton value="Cancel" onclick="PF('deleteUserDialogWidget').hide()" type="button" />
+            </div>
+          </h:form>
+        </p:outputPanel>
+    </p:confirmDialog>
+    
+  </ui:define>
+</ui:composition>
+</html>

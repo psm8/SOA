@@ -1,5 +1,6 @@
 package model;
 
+import java.io.Serializable;
 import javax.persistence.*;
 
 @Entity
@@ -8,7 +9,7 @@ import javax.persistence.*;
                 "title", "url"
         })
 })
-public class Movie {
+public class Movie implements Serializable {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
