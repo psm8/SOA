@@ -24,11 +24,12 @@ public class CRUDRepositoryImpl<T> implements CRUDRepository<T>, Serializable {
     }
 
     @Override
-    public T create(T obj) {
+    public T create(T obj) throws Exception{
         try {
-            em.persist(obj);
+            em.merge(obj);
         } catch (PersistenceException e) {
             log.error((e.getMessage()));
+            throw new Exception(e.getMessage());
         }
         return obj;
     }
@@ -57,14 +58,24 @@ public class CRUDRepositoryImpl<T> implements CRUDRepository<T>, Serializable {
     }
 
     @Override
-    public T update(T obj) {
-        em.merge(obj);
+    public T update(T obj) throws Exception{
+        try{
+            em.merge(obj);
+        } catch (PersistenceException e) {
+            log.error((e.getMessage()));
+            throw new Exception(e.getMessage());
+        }
         return obj;
     }
 
     @Override
-    public void delete(Class type, Object obj) {
-        this.em.remove(em.contains(obj) ? obj : em.merge(obj));
+    public void delete(Class type, Object obj) throws Exception{
+        try{
+            this.em.remove(em.contains(obj) ? obj : em.merge(obj));
+        } catch (PersistenceException e) {
+        log.error((e.getMessage()));
+        throw new Exception(e.getMessage());
+        }
     }
 
 }

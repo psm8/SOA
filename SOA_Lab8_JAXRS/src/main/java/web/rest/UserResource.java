@@ -46,23 +46,23 @@ public class UserResource {
     }
 
     @POST
-    @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response create(@PathParam("id") final Integer id, final User User) {
-        if(id == null) {
-            return Response.serverError().entity("ID cannot be blank").build();
-        }
+    public Response create(final User User) {
 
         if(User == null)  {
             return Response.status(javax.ws.rs.core.Response.Status.BAD_REQUEST)
                     .entity("User content not found")
                     .build();
         }
-
-        User entity = UserCRUDRepository.create(User);
-
-        return Response.ok(entity.getId()).build();
+        try{
+            User entity = UserCRUDRepository.create(User);
+            return Response.ok(entity.getId()).build();
+        } catch (Exception e) {
+            return Response.status(400)
+                .entity("Request failed" + e.getMessage())
+                .build();
+    }
     }
 
     @PATCH
@@ -91,10 +91,14 @@ public class UserResource {
         if(user.getAge() != null){ entity.setAge(user.getAge());}
         if(user.getAvatar() != null){ entity.setAvatar(user.getAvatar());}
         if(user.getMovies() != null){ entity.setMovies(user.getMovies());}
-
-        UserCRUDRepository.update(entity);
-
-        return Response.ok(entity).build();
+        try{
+            UserCRUDRepository.update(entity);
+            return Response.ok(entity).build();
+        } catch (Exception e) {
+            return Response.status(400)
+                .entity("Request failed" + e.getMessage())
+                .build();
+        }
     }
 
     @DELETE
@@ -109,9 +113,13 @@ public class UserResource {
         if(entity == null) {
             return Response.status(Response.Status.NOT_FOUND).entity("Entity not found for ID: " + id).build();
         }
-
-        UserCRUDRepository.delete(User.class, id);
-
-        return Response.ok().build();
+        try{
+            UserCRUDRepository.delete(User.class, id);
+            return Response.ok().build();
+        } catch (Exception e) {
+            return Response.status(400)
+                .entity("Request failed" + e.getMessage())
+                .build();
+        }
     }
 }

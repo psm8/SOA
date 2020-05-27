@@ -1,70 +1,73 @@
 package web.rest.client;
 
-import domain.UserEntity;
+import domain.MovieEntity;
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 
+import javax.enterprise.context.SessionScoped;
 import javax.ws.rs.client.Entity;
 
 import javax.ws.rs.core.Response;
-import javax.xml.registry.infomodel.User;
+import java.io.Serializable;
+import java.util.Arrays;
+import java.util.List;
 
-public class MovieClient {
-    final String FULL_PATH = "http://127.0.0.1:8080/SOA_Lab8_JAXRS_war_exploded/api/movie";
+@SessionScoped
+public class MovieClient implements Serializable {
+    final static String FULL_PATH = "http://127.0.0.1:8080/SOA_Lab8_JAXRS_war_exploded/api/movie";
 
-    public void getAllUsers() {
+    public List<MovieEntity> getAllMovies() {
 
         final ResteasyClient client = new ResteasyClientBuilder().build();
         final ResteasyWebTarget target = client
                 .target(FULL_PATH);
-        String response = target.request().get(String.class);
-        System.out.println(response);
+        Response response = target.request().accept("application/json").get();
+        List<MovieEntity> movies = Arrays.asList(response.readEntity(MovieEntity[].class));
+        response.close();
+
+        return movies;
     }
 
-    public void getUser() {
+    public MovieEntity getMovie(int id) {
 
         final ResteasyClient client = new ResteasyClientBuilder().build();
         final ResteasyWebTarget target = client
-                .target(FULL_PATH + "/100");
-        Response response = target.request().get();
-        User user = response.readEntity(User.class);
-        System.out.println(user.toString());
+                .target(FULL_PATH + "/" + id);
+        Response response = target.request().accept("application/json").get();
+        MovieEntity movie = response.readEntity(MovieEntity.class);
         response.close();
+
+        return movie;
     }
 
-    public UserEntity createUser(UserEntity user) {
+    public MovieEntity saveMovie(MovieEntity movie) {
         ResteasyClient client = new ResteasyClientBuilder().build();
         ResteasyWebTarget target = client.target(FULL_PATH);
-        Response response = target.request()
-                .post(Entity.entity(user, "application/json"));
-        System.out.println(response.getStatus());
+        Response response = target.request().accept("application/json")
+                .post(Entity.entity(movie, "application/json"));
+        MovieEntity result = response.readEntity(MovieEntity.class);
         response.close();
-        return new UserEntity();
+
+        return result;
     }
 
-    public UserEntity updateUser(UserEntity user) {
-        user.setName("Ram");
+    public MovieEntity updateMovie(MovieEntity movie) {
         ResteasyClient client = new ResteasyClientBuilder().build();
-        ResteasyWebTarget target = client.target(FULL_PATH + "/100");
-        Response response = target.request()
-                .put(Entity.entity(user, "application/json"));
-        System.out.println(response.getStatus());
+        ResteasyWebTarget target = client.target(FULL_PATH + "/" + movie.getId());
+        Response response = target.request().accept("application/json")
+                .method("PATCH", Entity.entity(movie, "application/json"));
+        MovieEntity result = response.readEntity(MovieEntity.class);
         response.close();
-        return new UserEntity();
+
+        return result;
     }
 
-    public void deleteUser() {
+    public void deleteMovie(MovieEntity movie) {
         ResteasyClient client = new ResteasyClientBuilder().build();
-        ResteasyWebTarget target = client.target(FULL_PATH + "/101");
-        Response response = target.request()
+        ResteasyWebTarget target = client.target(FULL_PATH + "/" + movie.getId());
+        Response response = target.request().accept("application/json")
                 .delete();
-        System.out.println(response.getStatus());
         response.close();
-
-        final ResteasyWebTarget target1 = client
-                .target(FULL_PATH);
-        String response1 = target1.request().get(String.class);
-        System.out.println(response1);
     }
 }

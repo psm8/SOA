@@ -1,14 +1,18 @@
 package web.jsf;
 
 import domain.MovieEntity;
+import org.json.JSONException;
 import web.rest.client.MovieClient;
 
 import javax.faces.application.FacesMessage;
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
+import javax.faces.convert.Converter;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.PersistenceException;
+import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Level;
@@ -16,7 +20,7 @@ import java.util.logging.Logger;
 
 @Named("movieBean")
 @ViewScoped
-public class MovieBean implements Serializable {
+public class MovieBean implements Converter, Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -29,18 +33,20 @@ public class MovieBean implements Serializable {
     @Inject
     private MovieClient movieClient;
 
-    public String persist() {
+    public String saveOrUpdate() {
+
+        String pageName = checkPageName();
 
         String message;
 
         try {
 
-            if (movie.getId() != null) {
-                movie = movieClient.update(movie);
-                message = "Entry updated";
+            if (pageName.equals("movieCreate.xhtml")) {
+                movie = movieClient.saveMovie(movie);
+                message = "Entry saved";
             } else {
-                movie = movieClient.save(movie);
-                message = "Entry created";
+                movie = movieClient.updateMovie(movie);
+                message = "Entry updated";
             }
         } catch (PersistenceException e) {
             logger.log(Level.SEVERE, "Error occured", e);
@@ -62,7 +68,7 @@ public class MovieBean implements Serializable {
         String message;
 
         try {
-            movieClient.delete(movie);
+            movieClient.deleteMovie(movie);
             message = "Entry deleted";
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Error occured", e);
@@ -94,13 +100,47 @@ public class MovieBean implements Serializable {
 
     public List<MovieEntity> getMovieList() {
         if (movieList == null) {
-            movieList = movieClient.findAllMovieEntities();
+            movieList = movieClient.getAllMovies();
         }
         return movieList;
     }
 
     public void setMovieList(List<MovieEntity> movieList) {
         this.movieList = movieList;
+    }
+
+    public String checkPageName(){
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        return request.getRequestURI().substring(request.getRequestURI().lastIndexOf("/") + 1);
+    }
+
+    @Override
+    @SuppressWarnings({"unchecked"})
+    public MovieEntity getAsObject(FacesContext context, UIComponent component,
+                              String value) {
+
+        if (value == null || value.isEmpty() || component == null) {
+            return null;
+        }
+        if (movieList == null) {
+            return movieClient.getMovie(Integer.valueOf(value));
+        } else {
+            return movieList.get(Integer.valueOf(value));
+        }
+    }
+
+
+    @Override
+    public String getAsString(FacesContext context, UIComponent component,
+                              Object value) {
+
+        if (value == null || !(value instanceof MovieEntity)) {
+            logger.log(Level.WARNING, "Can not convert value: {0}", value);
+            return "";
+        }
+
+        Integer id = ((MovieEntity) value).getId();
+        return id != null ? id.toString() : null;
     }
 
 }

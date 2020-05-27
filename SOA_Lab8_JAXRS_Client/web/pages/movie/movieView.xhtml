@@ -11,7 +11,7 @@
   <ui:define name="content">
   
     <f:metadata>
-      <f:viewParam name="id" value="#{movieBean.movie}" converter="#{genericEntityConverter}" />
+      <f:viewParam name="id" value="#{movieBean.movie}" converter="#{movieBean}" />
     </f:metadata>
     
     <p:outputPanel id="movieViewPanel" >

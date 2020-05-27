@@ -5,20 +5,28 @@ import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 
+import javax.enterprise.context.SessionScoped;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
 import javax.xml.registry.infomodel.User;
+import java.io.Serializable;
+import java.util.Arrays;
+import java.util.List;
 
-public class UserClient {
+@SessionScoped
+public class UserClient implements Serializable {
     final String FULL_PATH = "http://127.0.0.1:8080/SOA_Lab8_JAXRS_war_exploded/api/user";
 
-    public void getAllUsers() {
+    public List<UserEntity> getAllUsers() {
 
         final ResteasyClient client = new ResteasyClientBuilder().build();
         final ResteasyWebTarget target = client
                 .target(FULL_PATH);
-        String response = target.request().get(String.class);
-        System.out.println(response);
+        Response response = target.request().get();
+        List<UserEntity> movies = Arrays.asList(response.readEntity(UserEntity[].class));
+        response.close();
+
+        return movies;
     }
 
     public void getUser() {
@@ -32,7 +40,7 @@ public class UserClient {
         response.close();
     }
 
-    public UserEntity createUser(UserEntity user) {
+    public UserEntity saveUser(UserEntity user) {
         ResteasyClient client = new ResteasyClientBuilder().build();
         ResteasyWebTarget target = client.target(FULL_PATH);
         Response response = target.request()
@@ -53,7 +61,7 @@ public class UserClient {
         return new UserEntity();
     }
 
-    public void deleteUser() {
+    public void deleteUser(UserEntity user) {
         ResteasyClient client = new ResteasyClientBuilder().build();
         ResteasyWebTarget target = client.target(FULL_PATH + "/101");
         Response response = target.request()

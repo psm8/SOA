@@ -34,6 +34,20 @@ public class MovieResource {
     }
 
     @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAll(@QueryParam("title") final String title) {
+        if(title == null) {
+            return getAll();
+        }
+        List<Movie> entities = movieCRUDRepository.getByField(Movie.class , "title", title);
+        if(entities == null || entities.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND).entity("Entity not found for title: " + title).build();
+        }
+
+        return Response.ok(entities).build();
+    }
+
+    @GET
     @Produces("text/uri-list")
     public Response getAllAsUriList(){
         List<Movie> entities = movieCRUDRepository.getAll(Movie.class);
@@ -70,39 +84,23 @@ public class MovieResource {
         return Response.ok(entity).build();
     }
 
-    @GET
-    @Path("/{title}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response get(@PathParam("title") final String title) {
-        if(title == null) {
-            return Response.serverError().entity("ID cannot be blank").build();
-        }
-        List<Movie> entities = movieCRUDRepository.getByField(Movie.class , "title", title);
-        if(entities == null || entities.isEmpty()) {
-            return Response.status(Response.Status.NOT_FOUND).entity("Entity not found for title: " + title).build();
-        }
-
-        return Response.ok(entities).build();
-    }
-
     @POST
-    @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response create(@PathParam("id") final Integer id, final Movie movie) {
-        if(id == null) {
-            return Response.serverError().entity("ID cannot be blank").build();
-        }
-
+    public Response create(final Movie movie) {
         if(movie == null)  {
             return Response.status(javax.ws.rs.core.Response.Status.BAD_REQUEST)
                     .entity("Movie content not found")
                     .build();
         }
-
-        Movie entity = movieCRUDRepository.create(movie);
-
-        return Response.ok(entity.getId()).build();
+        try {
+            Movie entity = movieCRUDRepository.create(movie);
+            return Response.ok(entity).build();
+        } catch (Exception e) {
+            return Response.status(400)
+                    .entity("Request failed" + e.getMessage())
+                    .build();
+        }
     }
 
     @PATCH
@@ -126,13 +124,17 @@ public class MovieResource {
             return Response.status(Response.Status.NOT_FOUND).entity("Entity not found for ID: " + id).build();
         }
 
-        if(movie.getId() != null){ entity.setId(movie.getId());}
         if(movie.getTitle() != null){ entity.setTitle(movie.getTitle());}
         if(movie.getUrl() != null){ entity.setUrl(movie.getUrl());}
 
-        movieCRUDRepository.update(entity);
-
-        return Response.ok(entity).build();
+        try{
+            movieCRUDRepository.update(entity);
+            return Response.ok(entity).build();
+        } catch (Exception e) {
+            return Response.status(400)
+                .entity("Request failed" + e.getMessage())
+                .build();
+        }
     }
 
     @DELETE
@@ -148,8 +150,13 @@ public class MovieResource {
             return Response.status(Response.Status.NOT_FOUND).entity("Entity not found for ID: " + id).build();
         }
 
-        movieCRUDRepository.delete(Movie.class, id);
-
-        return Response.ok().build();
+        try{
+            movieCRUDRepository.delete(Movie.class, entity);
+            return Response.ok().build();
+        } catch (Exception e) {
+            return Response.status(400)
+                    .entity("Request failed" + e.getMessage())
+                    .build();
+        }
     }
 }

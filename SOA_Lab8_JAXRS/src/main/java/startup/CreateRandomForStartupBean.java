@@ -1,4 +1,4 @@
-package beans;
+package startup;
 
 import model.Movie;
 import model.User;
@@ -32,17 +32,22 @@ public class CreateRandomForStartupBean {
 
     @Transactional(value = Transactional.TxType.REQUIRES_NEW)
     public Movie createRandomMovie(){
+        try{
         return movieCRUDRepository.create(new Movie(getRandomName("title"), getRandomName("uri")));
+        } catch (Exception e){}
+        return new Movie(getRandomName("title"), getRandomName("uri"));
     }
 
     @Transactional(value = Transactional.TxType.REQUIRES_NEW)
-    public void createRandomUser(List<Movie> movies) throws IOException {
-        userCRUDRepository.create(new User(getRandomName("name"), getRandomAge(),
-                getRandomAvatar(), getRandomMovies(movies)));
+    public void createRandomUser(List<Movie> movies) {
+        try {
+            userCRUDRepository.create(new User(getRandomName("name"), getRandomAge(),
+                    getRandomAvatar(), getRandomMovies(movies)));
+        } catch (Exception e){}
     }
 
     private String getRandomName(String name){
-        return name + (int) (5 * Math.random());
+        return name + (int) (10 * Math.random());
     }
 
     private Integer getRandomAge(){

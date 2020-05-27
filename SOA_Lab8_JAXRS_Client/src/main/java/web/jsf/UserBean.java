@@ -51,7 +51,7 @@ public class UserBean implements Serializable {
                 user = userClient.updateUser(user);
                 message = "Entry updated";
             } else {
-                user = userClient.createUser(user);
+                user = userClient.saveUser(user);
                 message = "Entry created";
             }
         } catch (Exception e) {
@@ -74,7 +74,7 @@ public class UserBean implements Serializable {
         String message;
 
         try {
-            userClient.deleteUser(userEntity);
+            userClient.deleteUser(user);
             message = "Entry deleted";
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Error occured", e);
@@ -89,7 +89,7 @@ public class UserBean implements Serializable {
         return null;
     }
 
-    public DualListModel<MovieEntity> getUsermovie() {
+/*    public DualListModel<MovieEntity> getUsermovie() {
         return usermovie;
     }
 
@@ -135,9 +135,9 @@ public class UserBean implements Serializable {
             }
         }
 
-    }
+    }*/
 
-    public void onUsermovieSubmit() {
+/*    public void onUsermovieSubmit() {
         // Now we save the changes of the PickList to the database.
         try {
 
@@ -160,7 +160,7 @@ public class UserBean implements Serializable {
                 }
             }
 
-            this.user = userClient.update(this.user);
+            this.user = userClient.updateUser(this.user);
 
             FacesMessage facesMessage = new FacesMessage("Changes saved.");
             FacesContext.getCurrentInstance().addMessage(null, facesMessage);
@@ -174,7 +174,7 @@ public class UserBean implements Serializable {
             // Set validationFailed to keep the dialog open
             FacesContext.getCurrentInstance().validationFailed();
         }
-    }
+    }*/
 
     public UserEntity getUser() {
         // Need to check for null, because some strange behaviour of f:viewParam
@@ -193,7 +193,9 @@ public class UserBean implements Serializable {
 
     public List<UserEntity> getUserList() {
         if (userList == null) {
-            userList = userClient.findAllUserEntities();
+            try {
+                userList = userClient.getAllUsers();
+            } catch (Exception e){}
         }
         return userList;
     }
