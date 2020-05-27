@@ -8,7 +8,9 @@ import web.rest.client.MovieClient;
 import web.rest.client.UserClient;
 
 import javax.faces.application.FacesMessage;
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
+import javax.faces.convert.Converter;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -21,7 +23,7 @@ import java.util.logging.Logger;
 
 @Named("userBean")
 @ViewScoped
-public class UserBean implements Serializable {
+public class UserBean implements Converter, Serializable{
 
     private static final long serialVersionUID = 1L;
 
@@ -89,7 +91,7 @@ public class UserBean implements Serializable {
         return null;
     }
 
-/*    public DualListModel<MovieEntity> getUsermovie() {
+    public DualListModel<MovieEntity> getUsermovie() {
         return usermovie;
     }
 
@@ -114,8 +116,8 @@ public class UserBean implements Serializable {
         // Prepare the usermovie PickList
         this.user = user;
         List<MovieEntity> availableMoviesFromDB = userClient
-                .findAvailableUsermovie(this.user);
-        this.usermovie = new DualListModel<>(availableMoviesFromDB, this.user.getUsermovie());
+                .getUser(this.user.getId()).getMovies();
+        this.usermovie = new DualListModel<>(availableMoviesFromDB, this.user.getMovies());
 
         transferedUsermovieIDs = new ArrayList<>();
         removedUsermovieIDs = new ArrayList<>();
@@ -135,28 +137,28 @@ public class UserBean implements Serializable {
             }
         }
 
-    }*/
+    }
 
-/*    public void onUsermovieSubmit() {
+    public void onUsermovieSubmit() {
         // Now we save the changes of the PickList to the database.
         try {
 
-            List<MovieEntity> availableMoviesFromDB = userClient.findAvailableUsermovie(this.user);
+            List<MovieEntity> availableMoviesFromDB = userClient.getUser(this.user.getId()).getMovies();
 			List<MovieEntity> usermovieToRemove = new ArrayList<>();
 
-            for (MovieEntity movie : this.user.getUsermovie()) {
+            for (MovieEntity movie : this.user.getMovies()) {
                 if (removedUsermovieIDs.contains(movie.getId().toString())) {
                     usermovieToRemove.add(movie);
                 }
             }
             
             for (MovieEntity movie : usermovieToRemove) {
-                this.user.getUsermovie().remove(movie);;
+                this.user.getMovies().remove(movie);;
             }
 
             for (MovieEntity movie : availableMoviesFromDB) {
                 if (transferedUsermovieIDs.contains(movie.getId().toString())) {
-                    this.user.getUsermovie().add(movie);
+                    this.user.getMovies().add(movie);
                 }
             }
 
@@ -174,7 +176,7 @@ public class UserBean implements Serializable {
             // Set validationFailed to keep the dialog open
             FacesContext.getCurrentInstance().validationFailed();
         }
-    }*/
+    }
 
     public UserEntity getUser() {
         // Need to check for null, because some strange behaviour of f:viewParam
@@ -202,6 +204,35 @@ public class UserBean implements Serializable {
 
     public void setUserList(List<UserEntity> userList) {
         this.userList = userList;
+    }
+
+    @Override
+    @SuppressWarnings({"unchecked"})
+    public UserEntity getAsObject(FacesContext context, UIComponent component,
+                                  String value) {
+
+        if (value == null || value.isEmpty() || component == null) {
+            return null;
+        }
+        if (userList == null) {
+            return userClient.getUser(Integer.valueOf(value));
+        } else {
+            return userList.get(Integer.valueOf(value));
+        }
+    }
+
+
+    @Override
+    public String getAsString(FacesContext context, UIComponent component,
+                              Object value) {
+
+        if (value == null || !(value instanceof UserEntity)) {
+            logger.log(Level.WARNING, "Can not convert value: {0}", value);
+            return "";
+        }
+
+        Integer id = ((UserEntity) value).getId();
+        return id != null ? id.toString() : null;
     }
 
 }

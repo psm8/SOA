@@ -5,13 +5,12 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui"
-      xmlns:o="http://omnifaces.org/ui">
+      xmlns:p="http://primefaces.org/ui">
 <ui:composition template="/templates/layout.xhtml">
   <ui:define name="content">
   
     <f:metadata>
-      <f:viewParam name="id" value="#{userBean.user}" converter="#{genericEntityConverter}" />
+      <f:viewParam name="id" value="#{userBean.user}" converter="#{userBean}" />
     </f:metadata>
     
     <p:outputPanel id="userEditPanel">

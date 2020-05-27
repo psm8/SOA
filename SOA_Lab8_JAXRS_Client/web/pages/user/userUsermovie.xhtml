@@ -11,7 +11,7 @@
   <ui:define name="content">
   
     <f:metadata>
-      <f:viewParam name="id" value="#{userBean.user}" converter="#{genericEntityConverter}" />
+      <f:viewParam name="id" value="#{userBean.user}" converter="#{userBean}" />
       <f:viewAction action="#{userBean.onUsermovieDialog(userBean.user)}"/>
     </f:metadata>
     

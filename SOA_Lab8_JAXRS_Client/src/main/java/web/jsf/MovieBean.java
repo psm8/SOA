@@ -1,7 +1,6 @@
 package web.jsf;
 
 import domain.MovieEntity;
-import org.json.JSONException;
 import web.rest.client.MovieClient;
 
 import javax.faces.application.FacesMessage;
