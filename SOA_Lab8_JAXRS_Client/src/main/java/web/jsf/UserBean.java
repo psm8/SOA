@@ -15,6 +15,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.PersistenceException;
+import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,18 +44,20 @@ public class UserBean implements Converter, Serializable{
     private List<String> transferedUsermovieIDs;
     private List<String> removedUsermovieIDs;
 
-    public String persist() {
+    public String saveOrUpdate() {
+
+        String pageName = checkPageName();
 
         String message;
 
         try {
 
-            if (user.getId() != null) {
+            if (pageName.equals("movieCreate.xhtml")) {
+                user = userClient.saveUser(user);
+                message = "Entry saved";
+            } else {
                 user = userClient.updateUser(user);
                 message = "Entry updated";
-            } else {
-                user = userClient.saveUser(user);
-                message = "Entry created";
             }
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Error occured", e);
@@ -195,15 +198,18 @@ public class UserBean implements Converter, Serializable{
 
     public List<UserEntity> getUserList() {
         if (userList == null) {
-            try {
-                userList = userClient.getAllUsers();
-            } catch (Exception e){}
+            userList = userClient.getAllUsers();
         }
         return userList;
     }
 
     public void setUserList(List<UserEntity> userList) {
         this.userList = userList;
+    }
+
+    public String checkPageName(){
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        return request.getRequestURI().substring(request.getRequestURI().lastIndexOf("/") + 1);
     }
 
     @Override

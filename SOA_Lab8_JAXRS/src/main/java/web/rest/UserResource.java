@@ -114,7 +114,7 @@ public class UserResource {
             return Response.status(Response.Status.NOT_FOUND).entity("Entity not found for ID: " + id).build();
         }
         try{
-            UserCRUDRepository.delete(User.class, id);
+            UserCRUDRepository.delete(User.class, entity);
             return Response.ok().build();
         } catch (Exception e) {
             return Response.status(400)

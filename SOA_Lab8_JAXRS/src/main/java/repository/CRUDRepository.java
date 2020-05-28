@@ -1,8 +1,10 @@
 package repository;
 
+
 import java.util.List;
 
 public interface CRUDRepository<T> {
+
     T create(T c) throws Exception;
 
     T get(Class type, Object id);

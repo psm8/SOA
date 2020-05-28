@@ -21,7 +21,7 @@ public class User implements Serializable {
     @Lob @Basic(fetch=LAZY)
     @Column(name="avatar", columnDefinition="BLOB NOT NULL")
     private byte[] avatar;
-    @ManyToMany(cascade=CascadeType.MERGE, fetch = EAGER)
+    @ManyToMany(fetch = EAGER)
     @JoinTable(name="user_movie",
             joinColumns=@JoinColumn(name="user_id"),
             inverseJoinColumns=@JoinColumn(name="movie_id"))

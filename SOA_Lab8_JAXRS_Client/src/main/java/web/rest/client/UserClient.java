@@ -22,10 +22,10 @@ public class UserClient implements Serializable {
         final ResteasyWebTarget target = client
                 .target(FULL_PATH);
         Response response = target.request().accept("application/json").get();
-        List<UserEntity> Users = Arrays.asList(response.readEntity(UserEntity[].class));
+        List<UserEntity> users = Arrays.asList(response.readEntity(UserEntity[].class));
         response.close();
 
-        return Users;
+        return users;
     }
 
     public UserEntity getUser(int id) {
@@ -34,37 +34,37 @@ public class UserClient implements Serializable {
         final ResteasyWebTarget target = client
                 .target(FULL_PATH + "/" + id);
         Response response = target.request().accept("application/json").get();
-        UserEntity User = response.readEntity(UserEntity.class);
+        UserEntity user = response.readEntity(UserEntity.class);
         response.close();
 
-        return User;
+        return user;
     }
 
-    public UserEntity saveUser(UserEntity User) {
+    public UserEntity saveUser(UserEntity user) {
         ResteasyClient client = new ResteasyClientBuilder().build();
         ResteasyWebTarget target = client.target(FULL_PATH);
         Response response = target.request().accept("application/json")
-                .post(Entity.entity(User, "application/json"));
+                .post(Entity.entity(user, "application/json"));
         UserEntity result = response.readEntity(UserEntity.class);
         response.close();
 
         return result;
     }
 
-    public UserEntity updateUser(UserEntity User) {
+    public UserEntity updateUser(UserEntity user) {
         ResteasyClient client = new ResteasyClientBuilder().build();
-        ResteasyWebTarget target = client.target(FULL_PATH + "/" + User.getId());
+        ResteasyWebTarget target = client.target(FULL_PATH + "/" + user.getId());
         Response response = target.request().accept("application/json")
-                .method("PATCH", Entity.entity(User, "application/json"));
+                .method("PATCH", Entity.entity(user, "application/json"));
         UserEntity result = response.readEntity(UserEntity.class);
         response.close();
 
         return result;
     }
 
-    public void deleteUser(UserEntity User) {
+    public void deleteUser(UserEntity user) {
         ResteasyClient client = new ResteasyClientBuilder().build();
-        ResteasyWebTarget target = client.target(FULL_PATH + "/" + User.getId());
+        ResteasyWebTarget target = client.target(FULL_PATH + "/" + user.getId());
         Response response = target.request().accept("application/json")
                 .delete();
         response.close();

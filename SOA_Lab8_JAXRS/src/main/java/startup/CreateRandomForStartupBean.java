@@ -35,7 +35,7 @@ public class CreateRandomForStartupBean {
         try{
         return movieCRUDRepository.create(new Movie(getRandomName("title"), getRandomName("uri")));
         } catch (Exception e){}
-        return new Movie(getRandomName("title"), getRandomName("uri"));
+        return null;
     }
 
     @Transactional(value = Transactional.TxType.REQUIRES_NEW)
@@ -63,9 +63,12 @@ public class CreateRandomForStartupBean {
     }
 
     private List<Movie> getRandomMovies(List<Movie> movies){
+        List<Movie> moviesLocal = new ArrayList<>(movies);
         List<Movie> randomMovies = new ArrayList<>();
         for (int i = 0; i < (int) (10 * Math.random()); i++) {
-            randomMovies.add(movies.get((int) (movies.size() * Math.random())));
+            int r = (int) (moviesLocal.size() * Math.random());
+            randomMovies.add(movieCRUDRepository.get(Movie.class, moviesLocal.get(r).getId()));
+            moviesLocal.remove(r);
         }
 
         return randomMovies;

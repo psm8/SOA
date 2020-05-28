@@ -47,7 +47,7 @@ public class MovieBean implements Converter, Serializable {
                 movie = movieClient.updateMovie(movie);
                 message = "Entry updated";
             }
-        } catch (PersistenceException e) {
+        } catch (Exception e) {
             logger.log(Level.SEVERE, "Error occured", e);
             message = "Your changes could not be saved because an error occurred.";
             // Set validationFailed to keep the dialog open
@@ -99,6 +99,7 @@ public class MovieBean implements Converter, Serializable {
 
     public List<MovieEntity> getMovieList() {
         if (movieList == null) {
+
             movieList = movieClient.getAllMovies();
         }
         return movieList;

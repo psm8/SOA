@@ -26,7 +26,7 @@ public class CRUDRepositoryImpl<T> implements CRUDRepository<T>, Serializable {
     @Override
     public T create(T obj) throws Exception{
         try {
-            em.merge(obj);
+            em.persist(obj);
         } catch (PersistenceException e) {
             log.error((e.getMessage()));
             throw new Exception(e.getMessage());
