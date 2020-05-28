@@ -14,7 +14,7 @@ import java.util.List;
 
 @SessionScoped
 public class UserClient implements Serializable {
-    final static String FULL_PATH = "http://127.0.0.1:8080/SOA_Lab8_JAXRS_war_exploded/api/user";
+    final static String FULL_PATH = "http://127.0.0.1:8080/SOA_Lab8_JAXRS/api/user";
 
     public List<UserEntity> getAllUsers() {
 

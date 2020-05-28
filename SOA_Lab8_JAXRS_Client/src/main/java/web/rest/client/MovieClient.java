@@ -15,7 +15,7 @@ import java.util.List;
 
 @SessionScoped
 public class MovieClient implements Serializable {
-    final static String FULL_PATH = "http://127.0.0.1:8080/SOA_Lab8_JAXRS_war_exploded/api/movie";
+    final static String FULL_PATH = "http://127.0.0.1:8080/SOA_Lab8_JAXRS/api/movie";
 
     public List<MovieEntity> getAllMovies() {
 
