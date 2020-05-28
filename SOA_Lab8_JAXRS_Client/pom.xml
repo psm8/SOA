@@ -7,6 +7,7 @@
     <groupId>groupId</groupId>
     <artifactId>SOA_Lab8_JAXRS_Client</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>war</packaging>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -73,16 +74,26 @@
         <finalName>SOA_Lab8_JAXRS_Client</finalName>
         <plugins>
             <plugin>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <attachClasses>true</attachClasses>
+                    <webXml>target/SOA_Lab8_JAXRS_Client/WEB-INF/web.xml</webXml>
+                    <webResources>
+                        <resource>
+                            <directory>web</directory>
+                            <filtering>true</filtering>
+                        </resource>
+                    </webResources>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.wildfly.plugins</groupId>
                 <artifactId>wildfly-maven-plugin</artifactId>
-                <version>2.1.0.Beta1</version>
+                <version>2.0.2.Final</version>
                 <configuration>
-                    <modules-path>
-                        <paths>
-                            <path>/opt/WildFly/modules</path>
-                            <path>/opt/my-modules</path>
-                        </paths>
-                    </modules-path>
+
+                    <port>10090</port>
+
                 </configuration>
             </plugin>
         </plugins>

@@ -24,7 +24,7 @@ public class UserResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Fetch all user")
+    @ApiOperation(value = "Fetch all users")
     @ApiResponses({
             @ApiResponse(code=200, message="Success"),
             @ApiResponse(code=404, message="Not found")
@@ -35,7 +35,7 @@ public class UserResource {
             return Response.status(Response.Status.NOT_FOUND).entity("Entity not found").build();
         }
 
-        return Response.ok(entities).build();
+        return Response.ok(entities, MediaType.APPLICATION_JSON).build();
     }
 
     @GET
@@ -55,7 +55,7 @@ public class UserResource {
             return Response.status(Response.Status.NOT_FOUND).entity("Entity not found for ID: " + id).build();
         }
 
-        return Response.ok(entity).build();
+        return Response.ok(entity, MediaType.APPLICATION_JSON).build();
     }
 
     @POST
@@ -78,7 +78,7 @@ public class UserResource {
             RandomUtil r = new RandomUtil();
             user.setAvatar(r.getRandomAvatar());
             User entity = UserCRUDRepository.create(user);
-            return Response.ok(entity).build();
+            return Response.ok(entity, MediaType.APPLICATION_JSON).build();
         } catch (Exception e) {
             return Response.status(400)
                 .entity("Request failed" + e.getMessage())
@@ -121,7 +121,7 @@ public class UserResource {
         if(user.getMovies() != null){ entity.setMovies(user.getMovies());}
         try{
             UserCRUDRepository.update(entity);
-            return Response.ok(entity).build();
+            return Response.ok(entity, MediaType.APPLICATION_JSON).build();
         } catch (Exception e) {
             return Response.status(400)
                 .entity("Request failed" + e.getMessage())
@@ -133,7 +133,7 @@ public class UserResource {
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Update a user")
+    @ApiOperation(value = "Delete a user")
     @ApiResponses({
             @ApiResponse(code=200, message="Success"),
             @ApiResponse(code=400, message="Request failed"),

@@ -32,6 +32,7 @@ public class MovieResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Fetch all movies", produces = "application/json, text/uri-list, text/plain")
     @ApiResponses({
             @ApiResponse(code=200, message="Success"),
             @ApiResponse(code=404, message="Not found")
@@ -42,11 +43,12 @@ public class MovieResource {
             return Response.status(Response.Status.NOT_FOUND).entity("Entity not found").build();
         }
 
-        return Response.ok(entities).build();
+        return Response.ok(entities, MediaType.APPLICATION_JSON).build();
     }
 
     @GET
     @Produces("text/uri-list")
+    @ApiOperation(value = "Fetch all movies", produces = "application/json, text/uri-list, text/plain")
     @ApiResponses({
             @ApiResponse(code=200, message="Success"),
             @ApiResponse(code=404, message="Not found")
@@ -58,7 +60,7 @@ public class MovieResource {
             return Response.status(Response.Status.NOT_FOUND).entity("Entity not found").build();
         }
 
-        return Response.ok(entities.stream().map(Movie::getUrl).collect(Collectors.toList())).build();
+        return Response.ok(entities.stream().map(Movie::getUrl).collect(Collectors.toList()), "text/uri-list").build();
     }
 
     @GET
@@ -74,7 +76,7 @@ public class MovieResource {
             return Response.status(Response.Status.NOT_FOUND).entity("Entity not found").build();
         }
 
-        return Response.ok(entities).build();
+        return Response.ok(entities, MediaType.TEXT_PLAIN).build();
     }
 
     @GET
@@ -93,7 +95,7 @@ public class MovieResource {
             return Response.status(Response.Status.NOT_FOUND).entity("Entity not found for title: " + title).build();
         }
 
-        return Response.ok(entities).build();
+        return Response.ok(entities, MediaType.APPLICATION_JSON).build();
     }
 
     @GET
@@ -113,7 +115,7 @@ public class MovieResource {
             return Response.status(Response.Status.NOT_FOUND).entity("Entity not found for ID: " + id).build();
         }
 
-        return Response.ok(entity).build();
+        return Response.ok(entity, MediaType.APPLICATION_JSON).build();
     }
 
     @POST
@@ -132,7 +134,7 @@ public class MovieResource {
         }
         try {
             Movie entity = movieCRUDRepository.create(movie);
-            return Response.ok(entity).build();
+            return Response.ok(entity, MediaType.APPLICATION_JSON).build();
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity("Request failed" + e.getMessage())
@@ -174,7 +176,7 @@ public class MovieResource {
 
         try{
             movieCRUDRepository.update(entity);
-            return Response.ok(entity).build();
+            return Response.ok(entity, MediaType.APPLICATION_JSON).build();
         } catch (Exception e) {
             return Response.status(400)
                 .entity("Request failed" + e.getMessage())

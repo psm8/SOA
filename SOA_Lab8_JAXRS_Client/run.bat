@@ -1,0 +1,1 @@
+mvn clean package wildfly:deploy -Djboss.server.base.dir=standalone2 -Djboss.socket.binding.port-offset=100
