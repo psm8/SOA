@@ -12,7 +12,7 @@
 
     <h:form prependId="false" id="movieDataForm" >
 
-        <p:dataTable id="movieTable" value="#{movieBean.movieList}" var="movie" resizableColumns="true" paginator="true"
+        <p:dataTable id="movieTable" binding="#{table}" value="#{movieBean.movieList}" var="movie" resizableColumns="true" paginator="true"
                 paginatorTemplate=" {CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                 rowsPerPageTemplate="5,10,25,50" rows="10" draggableColumns="true"
                 paginatorPosition="bottom" widgetVar="movieTable" emptyMessage="No records found."
@@ -36,7 +36,7 @@
                     <f:convertNumber integerOnly="true" />
                 </p:inputText>
             </f:facet>
-            <h:outputText value="#{movie.id}" ><f:convertNumber /></h:outputText>
+              <h:outputText value="#{table.rowIndex + 1}" />
           </p:column>
 
           <p:column headerText="Title" sortBy="#{movie.title}" filterBy="#{movie.title}">

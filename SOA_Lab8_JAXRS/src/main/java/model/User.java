@@ -3,6 +3,7 @@ package model;
 import java.io.Serializable;
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
@@ -25,12 +26,12 @@ public class User implements Serializable {
     @JoinTable(name="user_movie",
             joinColumns=@JoinColumn(name="user_id"),
             inverseJoinColumns=@JoinColumn(name="movie_id"))
-    private List<Movie> movies;
+    private Set<Movie> movies;
 
     public User() {
     }
 
-    public User(String name, Integer age, byte[] avatar, List<Movie> movies) {
+    public User(String name, Integer age, byte[] avatar, Set<Movie> movies) {
         this.name = name;
         this.age = age;
         this.avatar = avatar;
@@ -69,11 +70,11 @@ public class User implements Serializable {
         this.avatar = avatar;
     }
 
-    public List<Movie> getMovies() {
+    public Set<Movie> getMovies() {
         return movies;
     }
 
-    public void setMovies(List<Movie> movies) {
+    public void setMovies(Set<Movie> movies) {
         this.movies = movies;
     }
 }

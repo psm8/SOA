@@ -11,7 +11,9 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Singleton
 public class CreateRandomForStartupBean {
@@ -62,9 +64,9 @@ public class CreateRandomForStartupBean {
         return IOUtils.toByteArray(inputStream);
     }
 
-    private List<Movie> getRandomMovies(List<Movie> movies){
+    private Set<Movie> getRandomMovies(List<Movie> movies){
         List<Movie> moviesLocal = new ArrayList<>(movies);
-        List<Movie> randomMovies = new ArrayList<>();
+        Set<Movie> randomMovies = new HashSet<>();
         for (int i = 0; i < (int) (10 * Math.random()); i++) {
             int r = (int) (moviesLocal.size() * Math.random());
             randomMovies.add(movieCRUDRepository.get(Movie.class, moviesLocal.get(r).getId()));

@@ -63,11 +63,15 @@ public class MovieClient implements Serializable {
         return result;
     }
 
-    public void deleteMovie(MovieEntity movie) {
+    public void deleteMovie(MovieEntity movie) throws Exception{
         ResteasyClient client = new ResteasyClientBuilder().build();
         ResteasyWebTarget target = client.target(FULL_PATH + "/" + movie.getId());
         Response response = target.request().accept("application/json")
                 .delete();
+        if(response.getStatus() != 200){
+            response.close();
+            throw new Exception(response.getStatusInfo().toString());
+        }
         response.close();
     }
 }

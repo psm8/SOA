@@ -1,6 +1,7 @@
 package web.rest;
 
 import model.Movie;
+import model.User;
 import repository.CRUDRepository;
 
 
@@ -10,6 +11,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Path("/movie")
@@ -18,6 +20,9 @@ public class MovieResource {
 
     @Inject
     private CRUDRepository<Movie> movieCRUDRepository;
+
+    @Inject
+    private CRUDRepository<User> userCRUDRepository;
 
     public MovieResource(){
     }
@@ -149,8 +154,13 @@ public class MovieResource {
         if(entity == null) {
             return Response.status(Response.Status.NOT_FOUND).entity("Entity not found for ID: " + id).build();
         }
-
         try{
+            List<User> users = userCRUDRepository.getAll(User.class);
+            for (User user : users){
+                Set<Movie> userMovies = user.getMovies();
+                userMovies.remove(entity);
+                userCRUDRepository.update(user);
+            }
             movieCRUDRepository.delete(Movie.class, entity);
             return Response.ok().build();
         } catch (Exception e) {

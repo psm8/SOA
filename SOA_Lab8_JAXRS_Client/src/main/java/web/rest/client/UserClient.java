@@ -62,11 +62,15 @@ public class UserClient implements Serializable {
         return result;
     }
 
-    public void deleteUser(UserEntity user) {
+    public void deleteUser(UserEntity user) throws Exception{
         ResteasyClient client = new ResteasyClientBuilder().build();
         ResteasyWebTarget target = client.target(FULL_PATH + "/" + user.getId());
         Response response = target.request().accept("application/json")
                 .delete();
+        if(response.getStatus() != 200){
+            response.close();
+            throw new Exception(response.getStatusInfo().toString());
+        }
         response.close();
     }
 

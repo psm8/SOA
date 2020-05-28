@@ -12,7 +12,7 @@
 
     <h:form prependId="false" id="userDataForm">
 
-        <p:dataTable id="userTable" value="#{userBean.userList}" var="user" resizableColumns="true" paginator="true"
+        <p:dataTable id="userTable" binding="#{table}" value="#{userBean.userList}" var="user" resizableColumns="true" paginator="true"
                 paginatorTemplate=" {CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                 rowsPerPageTemplate="5,10,25,50" rows="10" draggableColumns="true"
                 paginatorPosition="bottom" widgetVar="userTable" emptyMessage="No records found."
@@ -36,7 +36,7 @@
                     <f:convertNumber integerOnly="true" />
                 </p:inputText>
             </f:facet>
-            <h:outputText value="#{user.id}" ><f:convertNumber /></h:outputText>
+              <h:outputText value="#{table.rowIndex + 1}" />
           </p:column>
 
           <p:column headerText="Name" sortBy="#{user.name}" filterBy="#{user.name}">
@@ -60,14 +60,8 @@
             <h:outputText value="#{user.age}" ><f:convertNumber /></h:outputText>
           </p:column>
 
-          <p:column headerText="Avatar" sortBy="#{user.avatar}" filterBy="#{user.avatar}">
-            <f:facet name="filter">
-                <p:inputText id="avatarFilter"
-                        onkeypress="if (event.keyCode == 13) {PF('userTable').filter(); updateAvatarFilter(); return false; }" >
-                    <p:remoteCommand name="updateAvatarFilter" update="userTable:avatarFilter" />
-                </p:inputText>
-            </f:facet>
-            <h:outputText value="#{user.avatar}" />
+          <p:column headerText="Avatar">
+              <o:graphicImage value="#{user.avatar}" dataURI="true" width="20px" height="20px"/>
           </p:column>
 
           <p:column headerText="Usermovie" styleClass="action-column" exportable="false">
