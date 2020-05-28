@@ -52,7 +52,7 @@ public class UserBean implements Converter, Serializable{
 
         try {
 
-            if (pageName.equals("movieCreate.xhtml")) {
+            if (pageName.equals("userCreate.xhtml")) {
                 user = userClient.saveUser(user);
                 message = "Entry saved";
             } else {

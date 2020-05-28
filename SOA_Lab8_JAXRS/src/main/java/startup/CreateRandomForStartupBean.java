@@ -2,14 +2,12 @@ package startup;
 
 import model.Movie;
 import model.User;
-import org.apache.commons.io.IOUtils;
 import repository.CRUDRepository;
+import util.RandomUtil;
 
 import javax.ejb.Singleton;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -35,33 +33,19 @@ public class CreateRandomForStartupBean {
     @Transactional(value = Transactional.TxType.REQUIRES_NEW)
     public Movie createRandomMovie(){
         try{
-        return movieCRUDRepository.create(new Movie(getRandomName("title"), getRandomName("uri")));
+            RandomUtil r = new RandomUtil();
+            return movieCRUDRepository.create(new Movie(r.getRandomName("title"), r.getRandomName("uri")));
         } catch (Exception e){}
-        return null;
+            return null;
     }
 
     @Transactional(value = Transactional.TxType.REQUIRES_NEW)
     public void createRandomUser(List<Movie> movies) {
         try {
-            userCRUDRepository.create(new User(getRandomName("name"), getRandomAge(),
-                    getRandomAvatar(), getRandomMovies(movies)));
+            RandomUtil r = new RandomUtil();
+            userCRUDRepository.create(new User(r.getRandomName("name"), r.getRandomAge(),
+                    r.getRandomAvatar(), getRandomMovies(movies)));
         } catch (Exception e){}
-    }
-
-    private String getRandomName(String name){
-        return name + (int) (10 * Math.random());
-    }
-
-    private Integer getRandomAge(){
-        return (int) (18 + (100 * Math.random()));
-    }
-
-    private byte[] getRandomAvatar() throws IOException{
-        InputStream inputStream =
-                getClass().getClassLoader().getResourceAsStream("config/fake-data/avatar"
-                        + (int) (1 + 5 * Math.random())+".png");
-
-        return IOUtils.toByteArray(inputStream);
     }
 
     private Set<Movie> getRandomMovies(List<Movie> movies){

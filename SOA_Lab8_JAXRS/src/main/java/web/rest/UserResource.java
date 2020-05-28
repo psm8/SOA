@@ -2,6 +2,7 @@ package web.rest;
 
 import model.User;
 import repository.CRUDRepository;
+import util.RandomUtil;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -48,16 +49,18 @@ public class UserResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response create(final User User) {
+    public Response create(final User user) {
 
-        if(User == null)  {
+        if(user == null)  {
             return Response.status(javax.ws.rs.core.Response.Status.BAD_REQUEST)
                     .entity("User content not found")
                     .build();
         }
         try{
-            User entity = UserCRUDRepository.create(User);
-            return Response.ok(entity.getId()).build();
+            RandomUtil r = new RandomUtil();
+            user.setAvatar(r.getRandomAvatar());
+            User entity = UserCRUDRepository.create(user);
+            return Response.ok(entity).build();
         } catch (Exception e) {
             return Response.status(400)
                 .entity("Request failed" + e.getMessage())
