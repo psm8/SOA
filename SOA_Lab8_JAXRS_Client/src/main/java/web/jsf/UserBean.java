@@ -18,6 +18,7 @@ import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -118,9 +119,9 @@ public class UserBean implements Converter, Serializable{
     public void onUsermovieDialog(UserEntity user) {
         // Prepare the usermovie PickList
         this.user = user;
-        List<MovieEntity> availableMoviesFromDB = userClient
-                .getUser(this.user.getId()).getMovies();
-        this.usermovie = new DualListModel<>(availableMoviesFromDB, this.user.getMovies());
+        List<MovieEntity> availableMoviesFromServer = new LinkedList<>(movieClient.getAllMovies());
+        availableMoviesFromServer.removeAll(this.user.getMovies());
+        this.usermovie = new DualListModel<>(availableMoviesFromServer, this.user.getMovies());
 
         transferedUsermovieIDs = new ArrayList<>();
         removedUsermovieIDs = new ArrayList<>();
@@ -146,7 +147,7 @@ public class UserBean implements Converter, Serializable{
         // Now we save the changes of the PickList to the database.
         try {
 
-            List<MovieEntity> availableMoviesFromDB = userClient.getUser(this.user.getId()).getMovies();
+            List<MovieEntity> availableMoviesFromServer = movieClient.getAllMovies();
 			List<MovieEntity> usermovieToRemove = new ArrayList<>();
 
             for (MovieEntity movie : this.user.getMovies()) {
@@ -156,10 +157,10 @@ public class UserBean implements Converter, Serializable{
             }
             
             for (MovieEntity movie : usermovieToRemove) {
-                this.user.getMovies().remove(movie);;
+                this.user.getMovies().remove(movie);
             }
 
-            for (MovieEntity movie : availableMoviesFromDB) {
+            for (MovieEntity movie : availableMoviesFromServer) {
                 if (transferedUsermovieIDs.contains(movie.getId().toString())) {
                     this.user.getMovies().add(movie);
                 }

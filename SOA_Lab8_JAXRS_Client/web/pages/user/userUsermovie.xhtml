@@ -20,7 +20,7 @@
 		
 			<h:panelGrid >
 
-			   <p:pickList id="userUsermoviePickList" var="movie" itemLabel="#{movie.id}"
+			   <p:pickList id="userUsermoviePickList" var="movie" itemLabel="#{movie.id} #{movie.title} #{movie.url}"
 						   value="#{userBean.usermovie}" itemValue="#{movie}"
 						   showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains" >
 				   <o:converter converterId="omnifaces.ListConverter" list="#{userBean.fullUsermovieList}"/>

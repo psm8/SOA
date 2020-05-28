@@ -47,8 +47,15 @@ public class MovieEntity {
         return url;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setUrl(String url) { this.url = url; }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof MovieEntity)) {
+            return false;
+        }
+        MovieEntity other = (MovieEntity) obj;
+        return other.getId().equals(getId());
     }
 
 }
