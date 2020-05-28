@@ -1,5 +1,7 @@
 package web.rest;
 
+
+import io.swagger.annotations.*;
 import model.Movie;
 import model.User;
 import repository.CRUDRepository;
@@ -15,6 +17,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Path("/movie")
+@Api(tags={"Movie Resource"})
 @RequestScoped
 public class MovieResource {
 
@@ -29,6 +32,10 @@ public class MovieResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @ApiResponses({
+            @ApiResponse(code=200, message="Success"),
+            @ApiResponse(code=404, message="Not found")
+    })
     public Response getAll() {
         List<Movie> entities = movieCRUDRepository.getAll(Movie.class);
         if(entities == null || entities.isEmpty()) {
@@ -39,8 +46,45 @@ public class MovieResource {
     }
 
     @GET
+    @Produces("text/uri-list")
+    @ApiResponses({
+            @ApiResponse(code=200, message="Success"),
+            @ApiResponse(code=404, message="Not found")
+
+    })
+    public Response getAllAsUriList(){
+        List<Movie> entities = movieCRUDRepository.getAll(Movie.class);
+        if(entities == null || entities.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND).entity("Entity not found").build();
+        }
+
+        return Response.ok(entities.stream().map(Movie::getUrl).collect(Collectors.toList())).build();
+    }
+
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    @ApiOperation(value = "Fetch all movies", produces = "application/json, text/uri-list, text/plain")
+    @ApiResponses({
+            @ApiResponse(code=200, message="Success"),
+            @ApiResponse(code=404, message="Not found")
+    })
+    public Response getAllAsTextPlain(){
+        List<Movie> entities = movieCRUDRepository.getAll(Movie.class);
+        if(entities == null || entities.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND).entity("Entity not found").build();
+        }
+
+        return Response.ok(entities).build();
+    }
+
+    @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAll(@QueryParam("title") final String title) {
+    @ApiOperation(value = "Fetch all movies", produces = "application/json, text/uri-list, text/plain")
+    @ApiResponses({
+            @ApiResponse(code=200, message="Success"),
+            @ApiResponse(code=404, message="Not found")
+    })
+    public Response getAll(@ApiParam @QueryParam("title") final String title) {
         if(title == null) {
             return getAll();
         }
@@ -53,31 +97,14 @@ public class MovieResource {
     }
 
     @GET
-    @Produces("text/uri-list")
-    public Response getAllAsUriList(){
-        List<Movie> entities = movieCRUDRepository.getAll(Movie.class);
-        if(entities == null || entities.isEmpty()) {
-            return Response.status(Response.Status.NOT_FOUND).entity("Entity not found").build();
-        }
-
-        return Response.ok(entities.stream().map(Movie::getUrl).collect(Collectors.toList())).build();
-    }
-
-    @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    public Response getAllAsTextPlain(){
-        List<Movie> entities = movieCRUDRepository.getAll(Movie.class);
-        if(entities == null || entities.isEmpty()) {
-            return Response.status(Response.Status.NOT_FOUND).entity("Entity not found").build();
-        }
-
-        return Response.ok(entities).build();
-    }
-
-    @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response get(@PathParam("id") final Integer id) {
+    @ApiOperation(value = "Fetch a movie")
+    @ApiResponses({
+            @ApiResponse(code=200, message="Success"),
+            @ApiResponse(code=404, message="Not found")
+    })
+    public Response get(@ApiParam(required=true) @PathParam("id") final Integer id) {
         if(id == null) {
             return Response.serverError().entity("ID cannot be blank").build();
         }
@@ -92,9 +119,14 @@ public class MovieResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response create(final Movie movie) {
+    @ApiOperation(value = "Create a new movie")
+    @ApiResponses({
+            @ApiResponse(code=200, message="Created"),
+            @ApiResponse(code=400, message="Request Failed"),
+    })
+    public Response create(@ApiParam(required=true) final Movie movie) {
         if(movie == null)  {
-            return Response.status(javax.ws.rs.core.Response.Status.BAD_REQUEST)
+            return Response.status(Response.Status.BAD_REQUEST)
                     .entity("Movie content not found")
                     .build();
         }
@@ -102,7 +134,7 @@ public class MovieResource {
             Movie entity = movieCRUDRepository.create(movie);
             return Response.ok(entity).build();
         } catch (Exception e) {
-            return Response.status(400)
+            return Response.status(Response.Status.BAD_REQUEST)
                     .entity("Request failed" + e.getMessage())
                     .build();
         }
@@ -112,13 +144,21 @@ public class MovieResource {
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response update(@PathParam("id") final Integer id, final Movie movie) {
+    @ApiOperation(value = "Updates existing movie")
+    @ApiResponses({
+            @ApiResponse(code=200, message="Updated"),
+            @ApiResponse(code=400, message="Request failed"),
+            @ApiResponse(code=404, message="Not found"),
+            @ApiResponse(code=500, message="Server error")
+    })
+    public Response update(@ApiParam(required=true) @PathParam("id") final Integer id,
+                           @ApiParam(required=true) final Movie movie) {
         if(id == null) {
             return Response.serverError().entity("ID cannot be blank").build();
         }
 
         if(movie == null)  {
-            return Response.status(javax.ws.rs.core.Response.Status.BAD_REQUEST)
+            return Response.status(Response.Status.BAD_REQUEST)
                     .entity("Movie content not found")
                     .build();
         }
@@ -146,7 +186,14 @@ public class MovieResource {
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response delete(@PathParam("id") final Integer id) {
+    @ApiOperation(value = "Remove existing movie")
+    @ApiResponses({
+            @ApiResponse(code=200, message="Removed"),
+            @ApiResponse(code=400, message="Request failed"),
+            @ApiResponse(code=404, message="Not found"),
+            @ApiResponse(code=500, message="Server error")
+    })
+    public Response delete(@ApiParam(required=true) @PathParam("id") final Integer id) {
         if(id == null) {
             return Response.serverError().entity("ID cannot be blank").build();
         }

@@ -1,5 +1,6 @@
 package web.rest;
 
+import io.swagger.annotations.*;
 import model.User;
 import repository.CRUDRepository;
 import util.RandomUtil;
@@ -12,6 +13,7 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 
 @Path("/user")
+@Api(tags={"User Resource"})
 @RequestScoped
 public class UserResource {
     @Inject
@@ -22,6 +24,11 @@ public class UserResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Fetch all user")
+    @ApiResponses({
+            @ApiResponse(code=200, message="Success"),
+            @ApiResponse(code=404, message="Not found")
+    })
     public Response getAll() {
         List<User> entities = UserCRUDRepository.getAll(User.class);
         if(entities == null || entities.isEmpty()) {
@@ -34,7 +41,12 @@ public class UserResource {
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response get(@PathParam("id") final Integer id) {
+    @ApiOperation(value = "Fetch a user")
+    @ApiResponses({
+            @ApiResponse(code=200, message="Success"),
+            @ApiResponse(code=404, message="Not found")
+    })
+    public Response get(@ApiParam(required = true) @PathParam("id") final Integer id) {
         if(id == null) {
             return Response.serverError().entity("ID cannot be blank").build();
         }
@@ -49,7 +61,13 @@ public class UserResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response create(final User user) {
+    @ApiOperation(value = "Create a user")
+    @ApiResponses({
+            @ApiResponse(code=200, message="Success"),
+            @ApiResponse(code=400, message="Request failed"),
+            @ApiResponse(code=404, message="Not found")
+    })
+    public Response create(@ApiParam(required = true) final User user) {
 
         if(user == null)  {
             return Response.status(javax.ws.rs.core.Response.Status.BAD_REQUEST)
@@ -72,7 +90,14 @@ public class UserResource {
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response update(@PathParam("id") final Integer id, final User user) {
+    @ApiOperation(value = "Update a user")
+    @ApiResponses({
+            @ApiResponse(code=200, message="Success"),
+            @ApiResponse(code=400, message="Request failed"),
+            @ApiResponse(code=404, message="Not found"),
+            @ApiResponse(code=500, message="Server error")
+    })
+    public Response update(@ApiParam(required = true) @PathParam("id") final Integer id, @ApiParam(required = true) final User user) {
         if(id == null) {
             return Response.serverError().entity("ID cannot be blank").build();
         }
@@ -108,7 +133,14 @@ public class UserResource {
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response delete(@PathParam("id") final Integer id) {
+    @ApiOperation(value = "Update a user")
+    @ApiResponses({
+            @ApiResponse(code=200, message="Success"),
+            @ApiResponse(code=400, message="Request failed"),
+            @ApiResponse(code=404, message="Not found"),
+            @ApiResponse(code=500, message="Server error")
+    })
+    public Response delete(@ApiParam(required = true) @PathParam("id") final Integer id) {
         if(id == null) {
             return Response.serverError().entity("ID cannot be blank").build();
         }

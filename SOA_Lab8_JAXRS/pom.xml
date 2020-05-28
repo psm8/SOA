@@ -7,6 +7,7 @@
     <groupId>groupId</groupId>
     <artifactId>SOA_lab8_JAXRS</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>war</packaging>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -52,6 +53,99 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-jaxrs</artifactId>
+            <version>1.5.22</version>
+        </dependency>
+
     </dependencies>
+
+    <build>
+    <finalName>SOA_Lab8_JAXRS</finalName>
+    <plugins>
+        <plugin>
+            <artifactId>maven-war-plugin</artifactId>
+            <configuration>
+                <attachClasses>true</attachClasses>
+                <webXml>target/SOA_Lab8_JAXRS/WEB-INF/web.xml</webXml>
+                <webResources>
+                    <resource>
+                        <directory>web</directory>
+                        <filtering>true</filtering>
+                    </resource>
+                </webResources>
+            </configuration>
+        </plugin>
+        <plugin>
+            <groupId>org.wildfly.plugins</groupId>
+            <artifactId>wildfly-maven-plugin</artifactId>
+            <version>2.0.2.Final</version>
+        </plugin>
+        <plugin>
+            <groupId>com.googlecode.maven-download-plugin</groupId>
+            <artifactId>download-maven-plugin</artifactId>
+            <version>1.2.1</version>
+            <executions>
+                <execution>
+                    <id>swagger-ui</id>
+                    <phase>prepare-package</phase>
+                    <goals>
+                        <goal>wget</goal>
+                    </goals>
+                    <configuration>
+                        <skipCache>false</skipCache>
+                        <url>https://github.com/swagger-api/swagger-ui/archive/master.tar.gz</url>
+                        <unpack>true</unpack>
+                        <outputDirectory>${project.build.directory}</outputDirectory>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
+        <plugin>
+            <artifactId>maven-resources-plugin</artifactId>
+            <version>2.6</version>
+            <executions>
+                <execution>
+                    <id>copy-resources</id>
+                    <phase>prepare-package</phase>
+                    <goals>
+                        <goal>copy-resources</goal>
+                    </goals>
+                    <configuration>
+                        <outputDirectory>target/${build.finalName}/docs</outputDirectory>
+                        <resources>
+                            <resource>
+                                <directory>${project.build.directory}/swagger-ui-master/dist</directory>
+                            </resource>
+                        </resources>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
+        <plugin>
+            <groupId>com.google.code.maven-replacer-plugin</groupId>
+            <artifactId>replacer</artifactId>
+            <executions>
+                <execution>
+                    <id>replace-swagger-json-location</id>
+                    <phase>prepare-package</phase>
+                    <goals>
+                        <goal>replace</goal>
+                    </goals>
+                </execution>
+            </executions>
+            <configuration>
+                <file>${project.build.directory}/SOA_Lab8_JAXRS/docs/index.html</file>
+                <replacements>
+                    <replacement>
+                        <token>https://petstore.swagger.io/v2/swagger.json</token>
+                        <value>/SOA_Lab8_JAXRS/api/swagger.json</value>
+                    </replacement>
+                </replacements>
+            </configuration>
+        </plugin>
+    </plugins>
+    </build>
 
 </project>
