@@ -13,7 +13,29 @@
     <artifactId>client-subscriber</artifactId>
     <packaging>war</packaging>
 
+    <repositories>
+        <repository>
+            <id>prime-repo</id>
+            <url>http://repository.primefaces.org</url>
+            <name>PrimeFaces Maven Repository</name>
+        </repository>
+    </repositories>
+
     <dependencies>
+        <dependency>
+            <groupId>com.lab.soa</groupId>
+            <artifactId>JMS-service-impl</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.lab.soa</groupId>
+            <artifactId>JMS-service-api</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+
         <dependency>
             <groupId>org.primefaces</groupId>
             <artifactId>primefaces</artifactId>

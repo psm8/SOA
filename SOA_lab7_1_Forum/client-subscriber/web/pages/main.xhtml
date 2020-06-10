@@ -6,9 +6,18 @@
       xmlns:p="http://primefaces.org/ui">
 <ui:composition template="/templates/layout.xhtml">
   <ui:define name="content">
-    <p:panel id="mainPanel">
-      <h:outputText id="welcomeText" value="Welcome to 'SOA_Lab7_1_Forum'" />
-    </p:panel>
+    <h:form prependId="false" id="loginForm">
+      <p:panel id="mainPanel">
+        <h:outputText id="welcomeText" escape="false"
+                      value="Welcome to 'SOA_Lab7_1_Forum-client-subscriber'&lt;br/&gt; Please enter your name:"
+                      for="userInput"/>
+        <p:inputText value="#{subscriberBean.user}" id="userInput" label="Name" required="true"/>
+        <p:message for="userInput" display="icon" />
+        <center>
+          <h:commandButton action="topicsList.xhtml?faces-redirect=true" value="Sign In" class="btn btn-success btnSpace" />
+        </center>
+      </p:panel>
+    </h:form>
   </ui:define>
 </ui:composition>
 </html>
