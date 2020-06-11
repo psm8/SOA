@@ -1,52 +1,73 @@
 package mdb.topic;
 
+import model.Conversation;
+
 import javax.ejb.Singleton;
 import javax.jms.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Singleton
 public class Storage {
-    private Map<Topic, ArrayList<String>> topicsSubscibers;
-    private Map<String, ArrayList<String>> userMessages;
+    private Map<Topic, List<Conversation>> topicsConversations;
 
     public Storage() {
-        topicsSubscibers = new HashMap<>();
-        userMessages = new HashMap<>();
+        topicsConversations = new HashMap<>();
     }
 
-    public Map<Topic, ArrayList<String>> getTopicSubscibers() {
-        return topicsSubscibers;
+    public Map<String, List<String>> getTopicSubscribers() {
+        return topicsConversations.entrySet().stream().collect(Collectors.toMap(
+                e -> {
+                    String key;
+                    try {
+                        key = e.getKey().getTopicName();
+                    } catch (JMSException ex){
+                        key = "exception";
+                    }
+                    return key;
+                },
+                e -> {
+                   List<String> result = new ArrayList<>();
+                   for(Conversation c:e.getValue()){
+                       result.add(c.getUser());
+                   }
+                   return result;
+                })
+        );
     }
 
-    public void addTopicsSubscibers(Map<Topic, ArrayList<String>> topicsSubscibers) {
-        this.topicsSubscibers = topicsSubscibers;
+    public List<String> getTopics(){
+        return topicsConversations.keySet().stream().map(
+                e -> {
+                    String key;
+                    try {
+                        key = e.getTopicName();
+                    }catch (JMSException ex){
+                        key = "exception";
+                        }
+                    return key;
+        }).collect(Collectors.toList());
     }
 
-    public Map<String, ArrayList<String>> getUserMessages() {
-        return userMessages;
+    public void addTopicsConversations(Map<Topic, List<Conversation>> topicsConversations) {
+        this.topicsConversations = topicsConversations;
     }
 
-    public void setUserMessages(Map<String, ArrayList<String>> userMessages) {
-        this.userMessages = userMessages;
-    }
-
-    public void addTopicsSubscribers(Topic topic, ArrayList<String> subscibers){
-        if(!topicsSubscibers.containsKey(topic)) {
-            topicsSubscibers.put(topic, subscibers);
+    public void addTopicsConversations(Topic topic, List<Conversation> conversations){
+        if(!topicsConversations.containsKey(topic)) {
+            topicsConversations.put(topic, conversations);
         }
     }
 
     public void addTopic(Topic topic){
-        if(!topicsSubscibers.containsKey(topic)) {
-            topicsSubscibers.put(topic, new ArrayList<>());
+        if(!topicsConversations.containsKey(topic)) {
+            topicsConversations.put(topic, new ArrayList<>());
         }
     }
 
-    public void addSubscriber(Topic topic, String subscriber){
-        if(topicsSubscibers.containsKey(topic)) {
-            topicsSubscibers.get(topic).add(subscriber);
+    public void addConversation(Topic topic, Conversation conversation){
+        if(topicsConversations.containsKey(topic)) {
+            topicsConversations.get(topic).add(conversation);
         }
     }
 }

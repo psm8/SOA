@@ -3,22 +3,23 @@ package web.jsf;
 import mdb.topic.IJMSService;
 
 import javax.ejb.EJB;
-import javax.faces.view.ViewScoped;
+import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 import javax.jms.JMSException;
 import java.io.Serializable;
 import java.util.List;
 
 @Named
-@ViewScoped
+@SessionScoped
 public class PublisherBean implements Serializable {
 
     @EJB(lookup="java:global/client-publisher-1.0-SNAPSHOT/JMSService!mdb.topic.IJMSService")
     private IJMSService JMSService;
 
-    private List<String> topicList;
+    private List<String> topicsList;
     private String newTopic;
     private String specificUser;
+    private String message;
 
     public String getSpecificUser() {
         return specificUser;
@@ -36,19 +37,17 @@ public class PublisherBean implements Serializable {
         this.message = message;
     }
 
-    private String message;
-
-    public List<String> getTopicList() {
-        if (topicList == null) {
+    public List<String> getTopicsList() {
+        if (topicsList == null) {
             try {
-                topicList = JMSService.getTopicsAsString();
+                topicsList = JMSService.getTopicsAsString();
             } catch (Exception e){}
         }
-        return topicList;
+        return topicsList;
     }
 
-    public void setTopicList(List<String> topicList) {
-        this.topicList = topicList;
+    public void setTopicsList(List<String> topicsList) {
+        this.topicsList = topicsList;
     }
 
     public String getNewTopic() {
@@ -61,7 +60,7 @@ public class PublisherBean implements Serializable {
 
     public void registerTopic() throws JMSException {
         JMSService.addTopic(newTopic);
-        topicList = null;
+        topicsList = null;
         newTopic = null;
     }
 

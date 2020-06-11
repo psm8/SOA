@@ -1,13 +1,12 @@
 package mdb.topic;
 
-
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.jms.*;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Stateless
 public class JMSService implements IJMSService, Serializable {
@@ -54,11 +53,12 @@ public class JMSService implements IJMSService, Serializable {
     }
 
     @Override
-    public List<String> getTopicsAsString() throws JMSException{
-        List<String> topicsAsString = new ArrayList<>();
-        for(Topic topic : storage.getTopicSubscibers().keySet()){
-            topicsAsString.add(topic.getTopicName());
-        }
-        return topicsAsString;
+    public List<String> getTopicsAsString(){
+        return storage.getTopics();
+    }
+
+    @Override
+    public Map<String, List<String>> getTopicSubscribers(){
+        return storage.getTopicSubscribers();
     }
 }
