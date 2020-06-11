@@ -9,12 +9,12 @@
 <ui:composition template="/templates/layout.xhtml">
   <ui:define name="content">
 
-    <h:form prependId="false" id="movieDataForm" >
+    <h:form prependId="false" id="topicDataForm" >
 
-      <p:dataTable id="movieTable" binding="#{table}" value="#{publisherBean.topicList}" var="topic" resizableColumns="true" paginator="true"
+      <p:dataTable id="topicTable" binding="#{table}" value="#{publisherBean.topicList}" var="topic" resizableColumns="true" paginator="true"
                    paginatorTemplate=" {CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                    rowsPerPageTemplate="5,10,25,50" rows="10" draggableColumns="true"
-                   paginatorPosition="bottom" widgetVar="movieTable" emptyMessage="No records found."
+                   paginatorPosition="bottom" widgetVar="topicTable" emptyMessage="No records found."
                    reflow="true">
 
         <f:facet name="header" >
@@ -25,28 +25,21 @@
                            style="float:left" />
 
           <p:commandButton id="toggler" type="button" value="Select Columns" icon="ui-icon-calculator" />
-          <p:columnToggler datasource="movieTable" trigger="toggler" />
+          <p:columnToggler datasource="topicTable" trigger="toggler" />
         </f:facet>
 
-        <p:column headerText="Id" sortBy="#{movie.id}" filterBy="#{movie.id}">
-          <f:facet name="filter">
-            <p:inputText id="idFilter"
-                         onkeypress="if (event.keyCode == 13) {PF('movieTable').filter(); updateIdFilter(); return false; }" >
-              <p:remoteCommand name="updateIdFilter" update="movieTable:idFilter" />
-              <f:convertNumber integerOnly="true" />
-            </p:inputText>
-          </f:facet>
+        <p:column headerText="Id">
           <h:outputText value="#{table.rowIndex + 1}" />
         </p:column>
 
-        <p:column headerText="Title" sortBy="#{movie.title}" filterBy="#{movie.title}">
+        <p:column headerText="Title" sortBy="#{topicsList}" filterBy="#{topicList}">
           <f:facet name="filter">
             <p:inputText id="titleFilter"
-                         onkeypress="if (event.keyCode == 13) {PF('movieTable').filter(); updateTitleFilter(); return false; }" >
-              <p:remoteCommand name="updateTitleFilter" update="movieTable:titleFilter" />
+                         onkeypress="if (event.keyCode == 13) {PF('topicTable').filter(); updateTitleFilter(); return false; }" >
+              <p:remoteCommand name="updateTitleFilter" update="topicTable:titleFilter" />
             </p:inputText>
           </f:facet>
-          <h:outputText value="#{movie.title}" />
+          <h:outputText value="#{topicList}" />
         </p:column>
 
         <p:column styleClass="action-column" headerText="Actions" width="115" exportable="false">
@@ -70,30 +63,35 @@
     </h:form>
 
     <p:confirmDialog id="createTopicDialog" widgetVar="createTopicDialogWidget"
-                     header="Confirm Deletion"
+                     header="Create topic"
                      severity="alarm">
-      <f:facet name="message"><h:outputText value="Are you sure you want to delete this record?" escape="false"/></f:facet>
+      <f:facet name="message"><h:outputText value="Type your topic name:" escape="false"/></f:facet>
       <p:outputPanel>
         <h:form>
-          Add new topic: <h:inputText id="newTopicName" value="#{publisherBean.topic}" required="true"
+          Add new topic: <h:inputText id="newTopicName" value="#{publisherBean.newTopic}" required="true"
                                       requiredMessage="Provide topic name"/>
           <div style="text-align: center; margin:10px">
-            <p:commandButton value="Create" action="#{publisherBean.registerTopic}" update=":movieDataForm :growlForm:growl" oncomplete="PF('deleteMovieDialogWidget').hide()" />
-            <p:commandButton value="Cancel" onclick="PF('deleteMovieDialogWidget').hide()" type="button" />
+            <p:commandButton value="Create" action="#{publisherBean.registerTopic}" update=":topicDataForm :growlForm:growl" oncomplete="PF('createTopicDialogWidget').hide()" />
+            <p:commandButton value="Cancel" onclick="PF('createTopicDialogWidget').hide()" type="button" />
           </div>
         </h:form>
       </p:outputPanel>
     </p:confirmDialog>
 
-    <p:confirmDialog id="updateTopicDialog" widgetVar="updateTopicDialogWidget"
-                     header="Confirm Deletion"
+    <p:confirmDialog id="sendToTopicDialog" widgetVar="sendToTopicDialogWidget"
+                     header="Send to topic"
                      severity="alarm">
-      <f:facet name="message"><h:outputText value="Are you sure you want to delete this record?" escape="false"/></f:facet>
+      <f:facet name="message"><h:outputText value="Type your message:" escape="false"/></f:facet>
       <p:outputPanel>
         <h:form>
+        <h:outputText value = "Specify user name (leave empty to send to all)" />
+        <h:inputText id="userName" value="#{publisherBean.specificUser}" required="false"/>
+        <h:outputText value = "Send new Message:" />
+        <h:inputText id="message" value="#{publisherBean.message}" required="true"
+                                    requiredMessage="Provide topic name"/>
           <div style="text-align: center; margin:10px">
-            <p:commandButton value="Delete" action="#{movieBean.delete}" update=":movieDataForm :growlForm:growl" oncomplete="PF('deleteMovieDialogWidget').hide()" />
-            <p:commandButton value="Cancel" onclick="PF('deleteMovieDialogWidget').hide()" type="button" />
+            <p:commandButton value="Delete" action="#{publisherBean.sendMessage(topic)}" update=":topicDataForm :growlForm:growl" oncomplete="PF('sendTopicDialogWidget').hide()" />
+            <p:commandButton value="Cancel" onclick="PF('sendTopicDialogWidget').hide()" type="button" />
           </div>
         </h:form>
       </p:outputPanel>
@@ -102,12 +100,12 @@
     <p:confirmDialog id="deleteTopicDialog" widgetVar="deleteTopicDialogWidget"
                      header="Confirm Deletion"
                      severity="alarm">
-      <f:facet name="message"><h:outputText value="Are you sure you want to delete this record?" escape="false"/></f:facet>
+      <f:facet name="message"><h:outputText value="Are you sure you want to delete this topic?" escape="false"/></f:facet>
       <p:outputPanel>
         <h:form>
           <div style="text-align: center; margin:10px">
-            <p:commandButton value="Delete" action="#{movieBean.delete}" update=":movieDataForm :growlForm:growl" oncomplete="PF('deleteMovieDialogWidget').hide()" />
-            <p:commandButton value="Cancel" onclick="PF('deleteMovieDialogWidget').hide()" type="button" />
+            <p:commandButton value="Delete" action="#{publisherBean.delete}" update=":topicDataForm :growlForm:growl" oncomplete="PF('deleteTopicDialogWidget').hide()" />
+            <p:commandButton value="Cancel" onclick="PF('deleteTopicDialogWidget').hide()" type="button" />
           </div>
         </h:form>
       </p:outputPanel>
