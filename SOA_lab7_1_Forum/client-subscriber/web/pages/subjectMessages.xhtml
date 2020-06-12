@@ -9,7 +9,7 @@
     <ui:define name="content">
 
         <f:metadata>
-            <f:viewParam name="id" value="#{subscriberBean.topic}" />
+            <f:viewParam name="subject" value="#{subscriberBean.subject}" />
         </f:metadata>
 
         <h:form id="form">
@@ -21,7 +21,7 @@
             </p:repeat>
 
             <div style="margin:10px">
-                <p:commandButton value="Close" icon="ui-icon-close" action="/pages/topicsList?faces-redirect=true" immediate="true"/>
+                <p:commandButton value="Close" icon="ui-icon-close" action="/pages/subjectsList?faces-redirect=true" immediate="true"/>
             </div>
         </h:form>
     </ui:define>

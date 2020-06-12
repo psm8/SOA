@@ -7,6 +7,8 @@ import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -15,13 +17,17 @@ import java.util.Map;
 @SessionScoped
 public class SubscriberBean implements Serializable {
 
-    @EJB(lookup="java:global/client-subscriber-1.0-SNAPSHOT/JMSService!mdb.topic.IJMSService")
+/*    @EJB(lookup="java:global/client-subscriber-1.0-SNAPSHOT/JMSService!mdb.topic.IJMSService")*/
     private IJMSService JMSService;
 
-    String user;
-    String topic;
-    private Map<String, List<String>> topicsMap;
+    private String user;
+    private String subject;
+    private Map<String, List<String>> subjectsMap;
     private List<String> messages;
+
+    SubscriberBean() throws NamingException {
+        JMSService = InitialContext.doLookup("java:global/client-subscriber-1.0-SNAPSHOT/JMSService!mdb.topic.IJMSService");
+    }
 
     public String getUser() {
         return user;
@@ -31,28 +37,26 @@ public class SubscriberBean implements Serializable {
         this.user = user;
     }
 
-    public String getTopic() {
-        return topic;
+    public String getSubject() {
+        return subject;
     }
 
-    public void setTopic(String topic) {
-        this.topic = topic;
+    public void setSubject(String subject) {
+        this.subject = subject;
     }
 
-    public Map<String, List<String>> getTopicsMap() {
-        if (topicsMap == null) {
-            try {
-                topicsMap = JMSService.getTopicSubscribers();
-            } catch (Exception e){
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("couldn't get topic map"));
-                FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
-            }
+    public Map<String, List<String>> getSubjectsMap() {
+        try {
+            subjectsMap = JMSService.getSubjectsSubscribers();
+        } catch (Exception e){
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("couldn't get subject map"));
+            FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
         }
-        return topicsMap;
+        return subjectsMap;
     }
 
-    public void setTopicsMap(Map<String, List<String>> topicsMap) {
-        this.topicsMap = topicsMap;
+    public void setSubjectsMap(Map<String, List<String>> subjectsMap) {
+        this.subjectsMap = subjectsMap;
     }
 
     public List<String> getMessages() {
@@ -64,26 +68,26 @@ public class SubscriberBean implements Serializable {
     }
 
     public void loadMessages(){
-        this.messages = JMSService.getTopicsAsString();
+        this.messages = JMSService.getSubjects();
     }
 
-    public void subscribe(String topic){
-        String message = "subscription failed";
+    public void subscribe(){
+        String message = "subscription successful";
         try {
-            JMSService.subscribe(topic, user);
+            JMSService.subscribe(subject, user);
         } catch(Exception e){
-            message = "subscription successful";
+            message = "subscription failed";
         }
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(message));
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
     }
 
-    public void unsubscribe(String topic){
-        String message = "unsubscription failed";
+    public void unsubscribe(){
+        String message = "unsubscription successful";
         try {
-            JMSService.unsubscribe(topic, user);
+            JMSService.unsubscribe(subject, user);
         } catch(Exception e){
-            message = "unsubscription successful";
+            message = "unsubscription failed";
         }
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(message));
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);

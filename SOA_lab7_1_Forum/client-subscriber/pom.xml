@@ -23,13 +23,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.lab.soa</groupId>
-            <artifactId>JMS-service-impl</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
             <groupId>org.primefaces</groupId>
             <artifactId>primefaces</artifactId>
             <version>7.0</version>

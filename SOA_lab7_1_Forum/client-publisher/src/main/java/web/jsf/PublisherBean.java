@@ -1,31 +1,37 @@
 package web.jsf;
 
+
 import mdb.topic.IJMSService;
 
 import javax.ejb.EJB;
-import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
 import javax.inject.Named;
-import javax.jms.JMSException;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Named
-@SessionScoped
+@ViewScoped
 public class PublisherBean implements Serializable {
 
     private static final Logger logger = Logger.getLogger(PublisherBean.class.getName());
 
-    @EJB(lookup="java:global/client-publisher-1.0-SNAPSHOT/JMSService!mdb.topic.IJMSService")
+    /*@EJB(lookup="java:global/client-publisher-1.0-SNAPSHOT/JMSService!mdb.topic.IJMSService")*/
     private IJMSService JMSService;
 
-    private List<String> topicsList;
-    private String topic;
+    private List<String> subjectsList;
+    private String subject;
     private String specificUser;
     private String message;
+
+    PublisherBean() throws NamingException {
+        JMSService = InitialContext.doLookup("java:global/client-publisher-1.0-SNAPSHOT/JMSService!mdb.topic.IJMSService");
+    }
 
     public String getSpecificUser() {
         return specificUser;
@@ -43,41 +49,41 @@ public class PublisherBean implements Serializable {
         this.message = message;
     }
 
-    public List<String> getTopicsList() {
-        if (topicsList == null) {
+    public List<String> getSubjectsList() {
+        if (subjectsList == null) {
             try {
-                topicsList = JMSService.getTopicsAsString();
+                subjectsList = JMSService.getSubjects();
             } catch (Exception e){}
         }
-        return topicsList;
+        return subjectsList;
     }
 
-    public void setTopicsList(List<String> topicsList) {
-        this.topicsList = topicsList;
+    public void setSubjectsList(List<String> subjectsList) {
+        this.subjectsList = subjectsList;
     }
 
-    public String getTopic() {
-        return topic;
+    public String getSubject() {
+        return subject;
     }
 
-    public void setTopic(String topic) {
-        this.topic = topic;
+    public void setSubject(String subject) {
+        this.subject = subject;
     }
 
-    public void registerTopic() throws JMSException {
-        JMSService.addTopic(topic);
-        topicsList = null;
-        topic = null;
+    public void registerSubject() {
+        JMSService.addSubject(subject);
+        subjectsList = null;
+        subject = null;
     }
 
-    public void sendMessage(String topic){
+    public void sendMessage(){
         if(specificUser == null || specificUser.equals("")){
-            sendToAll(topic);
+            sendToAll(subject);
         }
     }
 
-    public void sendToAll(String topic){
-        JMSService.sendMessage(topic);
+    public void sendToAll(String subject){
+        JMSService.sendMessage(subject, message);
     }
 
     public String delete() {
@@ -85,17 +91,17 @@ public class PublisherBean implements Serializable {
         String message;
 
         try {
-            JMSService.removeTopic(topic);
+            JMSService.removeSubject(subject);
             message = "Entry deleted";
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "Error occured", e);
+            logger.log(Level.SEVERE, "Error occurred", e);
             message = "Error occurred on deleting this entry.";
             // Set validationFailed to keep the dialog open
             FacesContext.getCurrentInstance().validationFailed();
         }
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(message));
 
-        topicsList = null;
+        subjectsList = null;
 
         return null;
     }

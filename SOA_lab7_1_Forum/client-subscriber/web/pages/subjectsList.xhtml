@@ -8,44 +8,49 @@
 <ui:composition template="/templates/layout.xhtml">
     <ui:define name="content">
 
-        <h:form prependId="false" id="topicDataForm" >
+        <h:form prependId="false" id="subjectDataForm" >
 
-            <p:dataTable id="topicTable" binding="#{table}" value="#{subscriberBean.topicsMap.keySet()}" var="topic" resizableColumns="true" paginator="true"
+            <p:dataTable id="subjectTable" binding="#{table}" value="#{subscriberBean.subjectsMap.keySet()}" var="subject" resizableColumns="true" paginator="true"
                          paginatorTemplate=" {CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                          rowsPerPageTemplate="5,10,25,50" rows="10" draggableColumns="true"
-                         paginatorPosition="bottom" widgetVar="topicTable" emptyMessage="No records found."
+                         paginatorPosition="bottom" widgetVar="subjectTable" emptyMessage="No records found."
                          reflow="true">
                 <f:facet name="header" >
                     <p:commandButton id="toggler" type="button" value="Select Columns" icon="ui-icon-calculator" />
-                    <p:columnToggler datasource="topicTable" trigger="toggler" />
+                    <p:columnToggler datasource="subjectTable" trigger="toggler" />
                 </f:facet>
 
                 <p:column headerText="Id">
                     <h:outputText value="#{table.rowIndex + 1}" />
                 </p:column>
 
-                <p:column headerText="Title" sortBy="#{topic}" filterBy="#{topic}">
+                <p:column headerText="Title" sortBy="#{subject}" filterBy="#{subject}">
                     <f:facet name="filter">
                         <p:inputText id="titleFilter"
-                                     onkeypress="if (event.keyCode == 13) {PF('topicTable').filter(); updateTitleFilter(); return false; }" >
-                            <p:remoteCommand name="updateTitleFilter" update="topicTable:titleFilter" />
+                                     onkeypress="if (event.keyCode == 13) {PF('subjectTable').filter(); updateTitleFilter(); return false; }" >
+                            <p:remoteCommand name="updateTitleFilter" update="subjectTable:titleFilter" />
                         </p:inputText>
                     </f:facet>
-                    <h:outputText value="#{topic}" />
+                    <h:outputText value="#{subject}" />
                 </p:column>
 
                 <p:column styleClass="action-column" headerText="Actions" width="115" exportable="false">
-                    <p:commandButton action="#{'/pages/topicMessages?faces-redirect=true&amp;topic='.concat(topic)}"
+                    <p:commandButton action="#{'/pages/subjectMessages?faces-redirect=true&amp;subject='.concat(subject)}"
                                      icon="ui-icon-zoomin"
                                      title="View" />
 
                     <p:commandButton icon="ui-icon-pencil"
                                      oncomplete="PF('subscribeDialogWidget').show()"
-                                     title="Subscribe" />
+                                     title="Subscribe" >
+                                    <f:setPropertyActionListener value="#{subject}"
+                                                                 target="#{subscriberBean.subject}" />
+                    </p:commandButton>
 
                     <p:commandButton icon="ui-icon-close"
                                      oncomplete="PF('unsubscribeDialogWidget').show()"
-                                     title="Unsubscribe" >
+                                     title="Unsubscribe">
+                                    <f:setPropertyActionListener value="#{subject}"
+                                                                 target="#{subscriberBean.subject}" />
                     </p:commandButton>
                 </p:column>
             </p:dataTable>
@@ -62,8 +67,8 @@
             <p:outputPanel>
                 <h:form>
                     <div style="text-align: center; margin:10px">
-                        <p:commandButton value="Subscribe" action="#{subscriberBean.subscribe(topic)}"
-                                         update=":topicDataForm :growlForm:growl"
+                        <p:commandButton value="Subscribe" action="#{subscriberBean.subscribe}"
+                                         update=":subjectDataForm :growlForm:growl"
                                          oncomplete="PF('subscribeDialogWidget').hide()" />
                         <p:commandButton value="Cancel" onclick="PF('subscribeDialogWidget').hide()" type="button" />
                     </div>
@@ -78,8 +83,8 @@
             <p:outputPanel>
                 <h:form>
                     <div style="text-align: center; margin:10px">
-                        <p:commandButton value="Unsubscribe" action="#{subscriberBean.unsubscribe(topic)}"
-                                         update=":topicDataForm :growlForm:growl"
+                        <p:commandButton value="Unsubscribe" action="#{subscriberBean.unsubscribe}"
+                                         update=":subjectDataForm :growlForm:growl"
                                          oncomplete="PF('unsubscribeDialogWidget').hide()" />
                         <p:commandButton value="Cancel" onclick="PF('unsubscribeDialogWidget').hide()" type="button" />
                     </div>

@@ -2,114 +2,107 @@ package mdb.topic;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import javax.ejb.Stateless;
+import javax.ejb.SessionContext;
+import javax.ejb.Singleton;
 import javax.inject.Inject;
 import javax.jms.*;
-import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-@Stateless
+import static javax.jms.JMSContext.AUTO_ACKNOWLEDGE;
+
+@Singleton
 public class JMSService implements IJMSService, Serializable {
+
+    static final Logger logger = Logger.getLogger("JMSService");
+
     @Resource(mappedName = "java:/jms/topic/SOA_lab")
-    private Topic topicExample;
-    @Resource(mappedName = "java:/JmsXA")
+    private  Topic topic;
+    @Resource
+    private SessionContext sc;
+    @Resource(mappedName = "java:/ConnectionFactory")
     private ConnectionFactory connectionFactory;
-    private Connection connection;
 
     @Inject
     Storage storage;
 
     @Override
-    public void sendMessage(String txt) {
-        try {
-            TopicSession session = setup();
-            MessageProducer publisher = null;
-            publisher = session.createProducer(topicExample);
-            TextMessage message = session.createTextMessage(txt);
-            publisher.send(message);
-        } catch (Exception exc) {
-            exc.printStackTrace();
-        } finally {
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (JMSException e) {
-                    e.printStackTrace();
-                }
-            }
+    public void sendMessage(String subject, String txt) {
+        TextMessage message;
+        try (JMSContext context = connectionFactory.createContext(AUTO_ACKNOWLEDGE)){
+            message = context.createTextMessage();
+            message.setStringProperty("Type", subject);
+            message.setText(txt);
+            logger.log(Level.INFO,
+                    "JMSService.sendMessage: Setting message text to: {0}",
+                    message.getText());
+            context.createProducer().send(topic, message);
+        } catch (JMSException e) {
+            logger.log(Level.SEVERE,
+                    "JMSService.sendMessage: Exception: {0}", e.toString());
+            sc.setRollbackOnly();
         }
     }
 
     @Override
-    public void subscribe(String topic, String user) throws Exception{
-        ForumMDB listener;
+    public void subscribe(String subject, String user) throws Exception{
         JMSConsumer consumer;
 
-        InputStreamReader inputStreamReader;
-        char answer = '\0';
-
-        try (JMSContext context = connectionFactory.createContext();) {
-            System.out.println("Creating consumer for topic");
-            context.stop();
-            consumer = context.createDurableConsumer(findTopic(topic), "MakeItLast");
-            listener = new ForumMDB();
-            consumer.setMessageListener(listener);
-            System.out.println("Starting consumer");
-            context.start();
-
-        } catch (JMSRuntimeException | JMSException e) {
-            throw new Exception("Exception occurred: " + e.toString());
-        }
-    }
-
-    @Override
-    public void unsubscribe(String topic, String user) throws Exception{
-        try (JMSContext context = connectionFactory.createContext();) {
-            System.out.println("Unsubscribing from durable subscription");
-            context.unsubscribe("MakeItLast");
+        try (JMSContext context = connectionFactory.createContext(AUTO_ACKNOWLEDGE)){
+            context.setClientID(user + subject);
+            consumer = context.createDurableConsumer(topic , user + subject);
+            consumer.setMessageListener(new SubscriberMessageListener(user));
+            logger.log(Level.INFO,
+                    "JMSService.subscribe: Creating consumer for topic: {0}",
+                    subject + user);
         } catch (JMSRuntimeException e) {
-            throw new Exception("Exception occurred: " + e.toString());
+            logger.log(Level.INFO,
+                    "JMSService.subscribe: Exception: {0}", e.toString());
+            throw new Exception();
         }
     }
 
     @Override
-    public void addTopic(String newTopic) throws JMSException {
-        connection = connectionFactory.createConnection();
-        Session session = connection.createSession(false,
-                Session.AUTO_ACKNOWLEDGE);
-        Topic topic = session.createTopic(newTopic);
-        storage.addTopic(topic);
-        connection.close();
+    public void unsubscribe(String subject, String user) throws Exception{
+        try (JMSContext context = connectionFactory.createContext(AUTO_ACKNOWLEDGE)) {
+            logger.log(Level.INFO,
+                    "JMSService.unsubscribe: Unsubscribing from durable subscription: {0}",
+                    subject + user);
+            context.unsubscribe(user + subject);
+        } catch (JMSRuntimeException e) {
+            logger.log(Level.INFO,
+                    "JMSService.unsubscribe: Exception: {0}", e.toString());
+            throw new Exception();
+        }
     }
 
     @Override
-    public void removeTopic(String topic) throws JMSException {
-
+    public void addSubject(String subject){
+        storage.addSubject(subject);
     }
 
     @Override
-    public List<String> getTopicsAsString(){
-        return storage.getTopicsAsString();
+    public void removeSubject(String subject){
+        storage.removeSubject(subject);
     }
 
     @Override
-    public Map<String, List<String>> getTopicSubscribers(){
-        return storage.getTopicSubscribers();
+    public List<String> getSubjects(){
+        return storage.getSubjects();
     }
 
-    private TopicSession setup() throws JMSException{
-        connection = connectionFactory.createConnection();
-        TopicSession session = (TopicSession) connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-        connection.start();
-        return session;
+    @Override
+    public Map<String, List<String>> getSubjectsSubscribers(){
+        return storage.getSubjectsSubscribers();
     }
 
-    private Topic findTopic(String topicName) throws JMSException{
-        for(Topic topic : storage.getTopics()){
-            if(topic.getTopicName().equals(topicName)){
-                return topic;
+    private String findSubject(String subject){
+        for(String s : storage.getSubjects()){
+            if(s.equals(subject)){
+                return subject;
             }
         }
         return null;
@@ -118,9 +111,7 @@ public class JMSService implements IJMSService, Serializable {
     @PostConstruct
     private void addFakeData(){
         for (int i = 0; i < 10; i++) {
-            try {
-                this.addTopic("t" + i);
-            } catch (JMSException e){}
+            this.addSubject("t" + i);
         }
     }
 }

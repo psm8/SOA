@@ -8,51 +8,56 @@
 <ui:composition template="/templates/layout.xhtml">
   <ui:define name="content">
 
-    <h:form prependId="false" id="topicDataForm" >
+    <h:form prependId="false" id="subjectDataForm" >
 
-      <p:dataTable id="topicTable" binding="#{table}" value="#{publisherBean.topicsList}" var="topic" resizableColumns="true" paginator="true"
-                   paginatorTemplate=" {CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+      <p:dataTable id="subjectTable" binding="#{table}" value="#{publisherBean.subjectsList}" var="subject"
+                   resizableColumns="true" paginator="true"
+                   paginatorTemplate=" {CurrentPageReport}  {FirstPageLink} {PreviousPageLink}
+                   {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                    rowsPerPageTemplate="5,10,25,50" rows="10" draggableColumns="true"
-                   paginatorPosition="bottom" widgetVar="topicTable" emptyMessage="No records found."
+                   paginatorPosition="bottom" widgetVar="subjectTable" emptyMessage="No records found."
                    reflow="true">
 
         <f:facet name="header" >
 
-          <p:commandButton value="Create New Topic"
+          <p:commandButton value="Create New Subject"
                            icon="ui-icon-plusthick"
-                           oncomplete="PF('createTopicDialogWidget').show()"
+                           oncomplete="PF('createSubjectDialogWidget').show()"
                            style="float:left" />
 
           <p:commandButton id="toggler" type="button" value="Select Columns" icon="ui-icon-calculator" />
-          <p:columnToggler datasource="topicTable" trigger="toggler" />
+          <p:columnToggler datasource="subjectTable" trigger="toggler" />
         </f:facet>
 
         <p:column headerText="Id">
           <h:outputText value="#{table.rowIndex + 1}" />
         </p:column>
 
-        <p:column headerText="Title" sortBy="#{topic}" filterBy="#{topic}">
+        <p:column headerText="Title" sortBy="#{subject}" filterBy="#{subject}">
           <f:facet name="filter">
             <p:inputText id="titleFilter"
-                         onkeypress="if (event.keyCode == 13) {PF('topicTable').filter(); updateTitleFilter(); return false; }" >
-              <p:remoteCommand name="updateTitleFilter" update="topicTable:titleFilter" />
+                         onkeypress="if (event.keyCode == 13) {PF('subjectTable').filter(); updateTitleFilter(); return false; }" >
+              <p:remoteCommand name="updateTitleFilter" update="subjectTable:titleFilter" />
             </p:inputText>
           </f:facet>
-          <h:outputText value="#{topic}" />
+          <h:outputText value="#{subject}" />
         </p:column>
 
         <p:column styleClass="action-column" headerText="Actions" width="115" exportable="false">
 
           <p:commandButton icon="ui-icon-pencil"
-                           oncomplete="PF('sendToTopicDialogWidget').show()"
+                           oncomplete="PF('sendToSubjectDialogWidget').show()"
                            resetValues="true"
-                           title="Send" />
+                           title="Send" >
+          <f:setPropertyActionListener value="#{subject}"
+                                       target="#{publisherBean.subject}" />
+          </p:commandButton>
 
           <p:commandButton icon="ui-icon-close"
-                           oncomplete="PF('deleteTopicDialogWidget').show()"
+                           oncomplete="PF('deleteSubjectDialogWidget').show()"
                            title="Delete" >
-            <f:setPropertyActionListener value="#{topic}"
-                                         target="#{publisherBean.topic}" />
+            <f:setPropertyActionListener value="#{subject}"
+                                         target="#{publisherBean.subject}" />
           </p:commandButton>
 
         </p:column>
@@ -61,24 +66,26 @@
 
     </h:form>
 
-    <p:confirmDialog id="createTopicDialog" widgetVar="createTopicDialogWidget"
-                     header="Create topic"
+    <p:confirmDialog id="createSubjectDialog" widgetVar="createSubjectDialogWidget"
+                     header="Create subject"
                      severity="alarm">
-      <f:facet name="message"><h:outputText value="Type your topic name:" escape="false"/></f:facet>
+      <f:facet name="message"><h:outputText value="Type your subject name:" escape="false"/></f:facet>
       <p:outputPanel>
         <h:form>
-          Add new topic: <h:inputText id="newTopicName" value="#{publisherBean.topic}" required="true"
-                                      requiredMessage="Provide topic name"/>
+          Add new subject: <h:inputText id="newSubjectName" value="#{publisherBean.subject}" required="true"
+                                      requiredMessage="Provide subject name"/>
           <div style="text-align: center; margin:10px">
-            <p:commandButton value="Create" action="#{publisherBean.registerTopic}" update=":topicDataForm :growlForm:growl" oncomplete="PF('createTopicDialogWidget').hide()" />
-            <p:commandButton value="Cancel" onclick="PF('createTopicDialogWidget').hide()" type="button" />
+            <p:commandButton value="Create" action="#{publisherBean.registerSubject}"
+                             update=":subjectDataForm :growlForm:growl"
+                             oncomplete="PF('createSubjectDialogWidget').hide()" />
+            <p:commandButton value="Cancel" onclick="PF('createSubjectDialogWidget').hide()" type="button" />
           </div>
         </h:form>
       </p:outputPanel>
     </p:confirmDialog>
 
-    <p:confirmDialog id="sendToTopicDialog" widgetVar="sendToTopicDialogWidget"
-                     header="Send to topic"
+    <p:confirmDialog id="sendToSubjectDialog" widgetVar="sendToSubjectDialogWidget"
+                     header="Send To Subject"
                      severity="alarm">
       <f:facet name="message"><h:outputText value="Type your message:" escape="false"/></f:facet>
       <p:outputPanel>
@@ -87,24 +94,29 @@
         <h:inputText id="userName" value="#{publisherBean.specificUser}" required="false"/>
         <h:outputText value = "Send new Message:" />
         <h:inputText id="message" value="#{publisherBean.message}" required="true"
-                                    requiredMessage="Provide topic name"/>
+                                    requiredMessage="Provide subject name"/>
           <div style="text-align: center; margin:10px">
-            <p:commandButton value="Send" action="#{publisherBean.sendMessage(topic)}" update=":topicDataForm :growlForm:growl" oncomplete="PF('sendTopicDialogWidget').hide()" />
-            <p:commandButton value="Cancel" onclick="PF('sendTopicDialogWidget').hide()" type="button" />
+            <p:commandButton value="Send" action="#{publisherBean.sendMessage}"
+                             update=":subjectDataForm :growlForm:growl"
+                             oncomplete="PF('sendToSubjectDialogWidget').hide()" />
+            <p:commandButton value="Cancel" onclick="PF('sendToSubjectDialogWidget').hide()" type="button" />
           </div>
         </h:form>
       </p:outputPanel>
     </p:confirmDialog>
 
-    <p:confirmDialog id="deleteTopicDialog" widgetVar="deleteTopicDialogWidget"
+    <p:confirmDialog id="deleteSubjectDialog" widgetVar="deleteSubjectDialogWidget"
                      header="Confirm Deletion"
                      severity="alarm">
-      <f:facet name="message"><h:outputText value="Are you sure you want to delete this topic?" escape="false"/></f:facet>
+      <f:facet name="message">
+        <h:outputText value="Are you sure you want to delete this subject?" escape="false"/>
+      </f:facet>
       <p:outputPanel>
         <h:form>
           <div style="text-align: center; margin:10px">
-            <p:commandButton value="Delete" action="#{publisherBean.delete}" update=":topicDataForm :growlForm:growl" oncomplete="PF('deleteTopicDialogWidget').hide()" />
-            <p:commandButton value="Cancel" onclick="PF('deleteTopicDialogWidget').hide()" type="button" />
+            <p:commandButton value="Delete" action="#{publisherBean.delete}" update=":subjectDataForm :growlForm:growl"
+                             oncomplete="PF('deleteSubjectDialogWidget').hide()" />
+            <p:commandButton value="Cancel" onclick="PF('deleteSubjectDialogWidget').hide()" type="button" />
           </div>
         </h:form>
       </p:outputPanel>
