@@ -10,7 +10,7 @@
 
         <h:form prependId="false" id="topicDataForm" >
 
-            <p:dataTable id="topicTable" binding="#{table}" value="#{subscriberBean.topicsMap.keySet}" var="topic" resizableColumns="true" paginator="true"
+            <p:dataTable id="topicTable" binding="#{table}" value="#{subscriberBean.topicsMap.keySet()}" var="topic" resizableColumns="true" paginator="true"
                          paginatorTemplate=" {CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                          rowsPerPageTemplate="5,10,25,50" rows="10" draggableColumns="true"
                          paginatorPosition="bottom" widgetVar="topicTable" emptyMessage="No records found."
@@ -35,20 +35,17 @@
                 </p:column>
 
                 <p:column styleClass="action-column" headerText="Actions" width="115" exportable="false">
-                    <p:commandButton action="#{'/pages/movie/movieView?faces-redirect=true&amp;topic='.concat(topic)}"
+                    <p:commandButton action="#{'/pages/topicMessages?faces-redirect=true&amp;topic='.concat(topic)}"
                                      icon="ui-icon-zoomin"
                                      title="View" />
 
                     <p:commandButton icon="ui-icon-pencil"
-                                     oncomplete="PF('updateTopicDialogWidget').show()"
-                                     resetValues="true"
-                                     title="Edit" />
+                                     oncomplete="PF('subscribeDialogWidget').show()"
+                                     title="Subscribe" />
 
                     <p:commandButton icon="ui-icon-close"
-                                     oncomplete="PF('deleteTopicDialogWidget').show()"
-                                     title="Delete" >
-                        <f:setPropertyActionListener value="#{topic}"
-                                                     target="#{subscriberBean.topic}" />
+                                     oncomplete="PF('unsubscribeDialogWidget').show()"
+                                     title="Unsubscribe" >
                     </p:commandButton>
                 </p:column>
             </p:dataTable>
@@ -65,7 +62,9 @@
             <p:outputPanel>
                 <h:form>
                     <div style="text-align: center; margin:10px">
-                        <p:commandButton value="Delete" action="#{subscriberBean.subscribe}" update=":topicDataForm :growlForm:growl" oncomplete="PF('subscribeDialogWidget').hide()" />
+                        <p:commandButton value="Subscribe" action="#{subscriberBean.subscribe(topic)}"
+                                         update=":topicDataForm :growlForm:growl"
+                                         oncomplete="PF('subscribeDialogWidget').hide()" />
                         <p:commandButton value="Cancel" onclick="PF('subscribeDialogWidget').hide()" type="button" />
                     </div>
                 </h:form>
@@ -79,7 +78,9 @@
             <p:outputPanel>
                 <h:form>
                     <div style="text-align: center; margin:10px">
-                        <p:commandButton value="Delete" action="#{subscriberBean.unsubscribe}" update=":topicDataForm :growlForm:growl" oncomplete="PF('unsubscribeDialogWidget').hide()" />
+                        <p:commandButton value="Unsubscribe" action="#{subscriberBean.unsubscribe(topic)}"
+                                         update=":topicDataForm :growlForm:growl"
+                                         oncomplete="PF('unsubscribeDialogWidget').hide()" />
                         <p:commandButton value="Cancel" onclick="PF('unsubscribeDialogWidget').hide()" type="button" />
                     </div>
                 </h:form>

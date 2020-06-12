@@ -44,9 +44,9 @@
         <p:column styleClass="action-column" headerText="Actions" width="115" exportable="false">
 
           <p:commandButton icon="ui-icon-pencil"
-                           oncomplete="PF('sendTopicDialogWidget').show()"
+                           oncomplete="PF('sendToTopicDialogWidget').show()"
                            resetValues="true"
-                           title="Edit" />
+                           title="Send" />
 
           <p:commandButton icon="ui-icon-close"
                            oncomplete="PF('deleteTopicDialogWidget').show()"
@@ -67,7 +67,7 @@
       <f:facet name="message"><h:outputText value="Type your topic name:" escape="false"/></f:facet>
       <p:outputPanel>
         <h:form>
-          Add new topic: <h:inputText id="newTopicName" value="#{publisherBean.newTopic}" required="true"
+          Add new topic: <h:inputText id="newTopicName" value="#{publisherBean.topic}" required="true"
                                       requiredMessage="Provide topic name"/>
           <div style="text-align: center; margin:10px">
             <p:commandButton value="Create" action="#{publisherBean.registerTopic}" update=":topicDataForm :growlForm:growl" oncomplete="PF('createTopicDialogWidget').hide()" />
@@ -89,7 +89,7 @@
         <h:inputText id="message" value="#{publisherBean.message}" required="true"
                                     requiredMessage="Provide topic name"/>
           <div style="text-align: center; margin:10px">
-            <p:commandButton value="Delete" action="#{publisherBean.sendMessage(topic)}" update=":topicDataForm :growlForm:growl" oncomplete="PF('sendTopicDialogWidget').hide()" />
+            <p:commandButton value="Send" action="#{publisherBean.sendMessage(topic)}" update=":topicDataForm :growlForm:growl" oncomplete="PF('sendTopicDialogWidget').hide()" />
             <p:commandButton value="Cancel" onclick="PF('sendTopicDialogWidget').hide()" type="button" />
           </div>
         </h:form>

@@ -8,7 +8,10 @@ import java.util.Map;
 @Remote
 public interface IJMSService {
     void sendMessage(String txt);
-    void addTopic(String newTopic) throws JMSException;
+    void subscribe(String topic, String user) throws Exception;
+    void unsubscribe(String topic, String user) throws Exception;
+    void addTopic(String topic) throws JMSException;
+    void removeTopic(String topic) throws JMSException;
     List<String> getTopicsAsString();
     Map<String, List<String>> getTopicSubscribers();
 }

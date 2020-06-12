@@ -4,20 +4,26 @@ import mdb.topic.IJMSService;
 
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import javax.jms.JMSException;
 import java.io.Serializable;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Named
 @SessionScoped
 public class PublisherBean implements Serializable {
 
+    private static final Logger logger = Logger.getLogger(PublisherBean.class.getName());
+
     @EJB(lookup="java:global/client-publisher-1.0-SNAPSHOT/JMSService!mdb.topic.IJMSService")
     private IJMSService JMSService;
 
     private List<String> topicsList;
-    private String newTopic;
+    private String topic;
     private String specificUser;
     private String message;
 
@@ -50,18 +56,18 @@ public class PublisherBean implements Serializable {
         this.topicsList = topicsList;
     }
 
-    public String getNewTopic() {
-        return newTopic;
+    public String getTopic() {
+        return topic;
     }
 
-    public void setNewTopic(String newTopic) {
-        this.newTopic = newTopic;
+    public void setTopic(String topic) {
+        this.topic = topic;
     }
 
     public void registerTopic() throws JMSException {
-        JMSService.addTopic(newTopic);
+        JMSService.addTopic(topic);
         topicsList = null;
-        newTopic = null;
+        topic = null;
     }
 
     public void sendMessage(String topic){
@@ -74,7 +80,23 @@ public class PublisherBean implements Serializable {
         JMSService.sendMessage(topic);
     }
 
-    public void delete(){
+    public String delete() {
 
+        String message;
+
+        try {
+            JMSService.removeTopic(topic);
+            message = "Entry deleted";
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error occured", e);
+            message = "Error occurred on deleting this entry.";
+            // Set validationFailed to keep the dialog open
+            FacesContext.getCurrentInstance().validationFailed();
+        }
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(message));
+
+        topicsList = null;
+
+        return null;
     }
 }

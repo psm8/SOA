@@ -36,7 +36,7 @@ public class Storage {
         );
     }
 
-    public List<String> getTopics(){
+    public List<String> getTopicsAsString(){
         return topicsConversations.keySet().stream().map(
                 e -> {
                     String key;
@@ -47,6 +47,10 @@ public class Storage {
                         }
                     return key;
         }).collect(Collectors.toList());
+    }
+
+    public List<Topic> getTopics(){
+        return new ArrayList<>(topicsConversations.keySet());
     }
 
     public void addTopicsConversations(Map<Topic, List<Conversation>> topicsConversations) {
