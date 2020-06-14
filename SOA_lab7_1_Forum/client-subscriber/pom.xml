@@ -39,5 +39,45 @@
             <artifactId>omnifaces</artifactId>
             <version>2.7.4</version>
         </dependency>
+        <dependency>
+            <groupId>com.lab.soa</groupId>
+            <artifactId>JMS-service-impl</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
+
+    <build>
+        <finalName>${parent.artifactId}-${project.artifactId}</finalName>
+        <plugins>
+            <plugin>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <!--                    <packagingExcludes>WEB-INF/lib/*.jar</packagingExcludes>-->
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>WEB-INF/lib/</classpathPrefix>
+                        </manifest>
+                    </archive>
+                    <attachClasses>true</attachClasses>
+                    <webXml>target/SOA_Lab7_1_Forum-client-subscriber/WEB-INF/web.xml</webXml>
+                    <webResources>
+                        <resource>
+                            <directory>web</directory>
+                            <filtering>true</filtering>
+                        </resource>
+                    </webResources>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.wildfly.plugins</groupId>
+                <artifactId>wildfly-maven-plugin</artifactId>
+                <version>2.0.2.Final</version>
+                <configuration>
+                    <skip>false</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

@@ -20,7 +20,6 @@
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
-
         <dependency>
             <groupId>javax.jms</groupId>
             <artifactId>javax.jms-api</artifactId>
@@ -29,6 +28,9 @@
     </dependencies>
 
     <build>
+        <finalName>${parent.artifactId}-${project.artifactId}</finalName>
+        <plugins>
+        </plugins>
     </build>
 
 </project>
