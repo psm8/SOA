@@ -31,11 +31,11 @@ public class Storage {
         return new ArrayList<>(subjectsConversations.keySet());
     }
 
-    public void addsubjectsConversations(Map<String, List<Conversation>> subjectsConversations) {
+    public void addSubjectsConversations(Map<String, List<Conversation>> subjectsConversations) {
         this.subjectsConversations = subjectsConversations;
     }
 
-    public void addsubjectsConversations(String subject, List<Conversation> conversations){
+    public void addSubjectsConversations(String subject, List<Conversation> conversations){
         if(!subjectsConversations.containsKey(subject)) {
             subjectsConversations.put(subject, conversations);
         }
@@ -52,8 +52,11 @@ public class Storage {
     }
 
     public void addConversation(String subject, Conversation conversation){
-        if(subjectsConversations.containsKey(subject)) {
-            subjectsConversations.get(subject).add(conversation);
+        if(!subjectsConversations.containsKey(subject)) {
+            List<Conversation> conversations = new ArrayList<>();
+            conversations.add(conversation);
+            subjectsConversations.put(subject, conversations);
         }
+        subjectsConversations.get(subject).add(conversation);
     }
 }

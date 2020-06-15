@@ -1,12 +1,14 @@
 package web.jsf;
 
 
+import jms.JMSSender;
 import mdb.topic.IJMSService;
 
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
 import java.util.List;
@@ -19,14 +21,13 @@ public class PublisherBean implements Serializable {
 
     private static final Logger logger = Logger.getLogger(PublisherBean.class.getName());
 
-    @EJB(lookup="java:global/ear-1.0-SNAPSHOT/JMS-service-impl-1.0-SNAPSHOT/JMSService!mdb.topic.IJMSService")
-    private IJMSService JMSService;
-
     private List<String> subjectsList;
     private String subject;
     private String specificUser;
     private String message;
 
+    @Inject
+    JMSSender JMSSender;
 
     public String getSpecificUser() {
         return specificUser;
@@ -47,7 +48,7 @@ public class PublisherBean implements Serializable {
     public List<String> getSubjectsList() {
         if (subjectsList == null) {
             try {
-                subjectsList = JMSService.getSubjects();
+                subjectsList = JMSSender.getSubjects();
             } catch (Exception e){}
         }
         return subjectsList;
@@ -66,7 +67,7 @@ public class PublisherBean implements Serializable {
     }
 
     public void registerSubject() {
-        JMSService.addSubject(subject);
+        JMSSender.addSubject(subject);
         subjectsList = null;
         subject = null;
     }
@@ -78,7 +79,7 @@ public class PublisherBean implements Serializable {
     }
 
     public void sendToAll(String subject){
-        JMSService.sendMessage(subject, message);
+        JMSSender.sendMessage(subject, message);
     }
 
     public String delete() {
@@ -86,7 +87,7 @@ public class PublisherBean implements Serializable {
         String message;
 
         try {
-            JMSService.removeSubject(subject);
+            JMSSender.removeSubject(subject);
             message = "Entry deleted";
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Error occurred", e);

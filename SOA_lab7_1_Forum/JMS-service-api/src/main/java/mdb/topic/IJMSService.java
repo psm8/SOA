@@ -6,7 +6,6 @@ import java.util.Map;
 
 @Remote
 public interface IJMSService {
-    void sendMessage(String subject, String txt);
     void subscribe(String subject, String user) throws Exception;
     void unsubscribe(String subject, String user) throws Exception;
     void addSubject(String subject);

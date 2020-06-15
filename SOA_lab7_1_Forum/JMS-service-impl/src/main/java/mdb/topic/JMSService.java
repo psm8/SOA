@@ -7,6 +7,7 @@ import javax.ejb.Singleton;
 import javax.inject.Inject;
 import javax.jms.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -21,6 +22,8 @@ public class JMSService implements IJMSService, Serializable {
 
     @Resource(mappedName = "java:/jms/topic/SOA_lab")
     private  Topic topic;
+    @Resource(mappedName = "java:/jms/queue/SOA_lab")
+    private Queue queue;
     @Resource
     private SessionContext sc;
     @Resource(mappedName = "java:/ConnectionFactory")
@@ -29,35 +32,29 @@ public class JMSService implements IJMSService, Serializable {
     @Inject
     Storage storage;
 
-    @Override
-    public void sendMessage(String subject, String txt) {
-        TextMessage message;
-        try (JMSContext context = connectionFactory.createContext(AUTO_ACKNOWLEDGE)){
-            message = context.createTextMessage();
-            message.setStringProperty("Type", subject);
-            message.setText(txt);
-            logger.log(Level.INFO,
-                    "JMSService.sendMessage: Setting message text to: {0}",
-                    message.getText());
-            context.createProducer().send(topic, message);
-        } catch (JMSException e) {
-            logger.log(Level.SEVERE,
-                    "JMSService.sendMessage: Exception: {0}", e.toString());
-            sc.setRollbackOnly();
-        }
-    }
+    List<JMSConsumer> activeConsumers = new ArrayList<>();
+
 
     @Override
     public void subscribe(String subject, String user) throws Exception{
         JMSConsumer consumer;
+        SubscriberMessageListener subscriberMessageListener;
 
         try (JMSContext context = connectionFactory.createContext(AUTO_ACKNOWLEDGE)){
+            context.stop();
             context.setClientID(user + subject);
-            consumer = context.createDurableConsumer(topic , user + subject);
-            consumer.setMessageListener(new SubscriberMessageListener(user));
+            consumer = context.createDurableConsumer(topic , "test"/*user + subject*/);
+            subscriberMessageListener = new SubscriberMessageListener(user + subject, storage);
+            consumer.setMessageListener(subscriberMessageListener);
+            context.start();
+            TextMessage message = context.createTextMessage();
+            message.setStringProperty("Type", subject);
+            message.setText("wiadomosc");
+            context.createProducer().send(topic, message);
+            activeConsumers.add(consumer);
             logger.log(Level.INFO,
                     "JMSService.subscribe: Creating consumer for topic: {0}",
-                    subject + user);
+                    user + subject);
         } catch (JMSRuntimeException e) {
             logger.log(Level.INFO,
                     "JMSService.subscribe: Exception: {0}", e.toString());
@@ -70,8 +67,8 @@ public class JMSService implements IJMSService, Serializable {
         try (JMSContext context = connectionFactory.createContext(AUTO_ACKNOWLEDGE)) {
             logger.log(Level.INFO,
                     "JMSService.unsubscribe: Unsubscribing from durable subscription: {0}",
-                    subject + user);
-            context.unsubscribe(user + subject);
+                    user + subject);
+            context.unsubscribe("test"/*user + subject*/);
         } catch (JMSRuntimeException e) {
             logger.log(Level.INFO,
                     "JMSService.unsubscribe: Exception: {0}", e.toString());
@@ -109,9 +106,8 @@ public class JMSService implements IJMSService, Serializable {
     }
 
     @PostConstruct
-    private void addFakeData(){
-        for (int i = 0; i < 10; i++) {
-            this.addSubject("t" + i);
-        }
+    private void worker(){
+        Runnable r = new ServerWorker(connectionFactory, queue, logger, storage);
+        new Thread(r).start();
     }
 }
