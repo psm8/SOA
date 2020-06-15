@@ -29,8 +29,6 @@
 
     <build>
         <finalName>${parent.artifactId}-${project.artifactId}</finalName>
-        <plugins>
-        </plugins>
     </build>
 
 </project>
