@@ -1,4 +1,4 @@
-package mdb.topic;
+package model;
 
 
 import model.Conversation;
@@ -20,26 +20,8 @@ public class Storage {
         return subjectsSubscribers;
     }
 
-    public List<String> getSubjects(){
-        return new ArrayList<>(subjectsSubscribers.keySet());
-    }
-
     public List<Conversation> getConversations() {
         return conversations;
-    }
-
-    public void setConversations(List<Conversation> conversations) {
-        this.conversations = conversations;
-    }
-
-    public void addSubjectsSubscribers(Map<String, List<String>> subjectsConversations) {
-        this.subjectsSubscribers = subjectsConversations;
-    }
-
-    public void addSubjectsSubscribers(String subject, List<String> subscribers){
-        if(!subjectsSubscribers.containsKey(subject)) {
-            subjectsSubscribers.put(subject, subscribers);
-        }
     }
 
     public void addSubject(String subject){

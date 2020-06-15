@@ -1,20 +1,23 @@
 package mdb.topic;
 
 
+import workers.ServerWorker;
+import workers.SubscriberWorker;
 import model.Conversation;
+import model.Storage;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.jms.*;
+import javax.jms.Queue;
 import java.io.Serializable;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static javax.jms.JMSContext.AUTO_ACKNOWLEDGE;
+
 
 
 @Stateless
@@ -32,23 +35,34 @@ public class JMSService implements IJMSService, Serializable {
     @Inject
     Storage storage;
 
+    Set<Thread> threads = new HashSet<>();
 
     @Override
-    public void subscribe(String subject, String user) throws Exception{
+    public void subscribe(String subject, String user){
         storage.addSubscriber(subject, user);
         Runnable r = new SubscriberWorker(connectionFactory, topic, queue, logger, storage, user, subject);
-        new Thread(r).start();
+        Thread t = new Thread(r);
+        t.setName(user + "#" + subject);
+        threads.add(t);
+        t.start();
     }
 
     @Override
     public void unsubscribe(String subject, String user) throws Exception{
-        storage.getSubjectsSubscribers().get(subject).remove(user);
-        try (JMSContext context = connectionFactory.createContext(AUTO_ACKNOWLEDGE)) {
+
+        try {
+            storage.getSubjectsSubscribers().get(subject).remove(user);
+            for (Thread t: threads) {
+                if (t.getName().equals(user + "#" + subject)) {
+                    t.interrupt();
+                    threads.remove(t);
+                    break;
+                }
+            }
             logger.log(Level.INFO,
                     "JMSService.unsubscribe: Unsubscribing from durable subscription: {0}",
                     user + "#" + subject);
-            context.unsubscribe(user + "#" + subject);
-        } catch (JMSRuntimeException e) {
+        } catch (Exception e) {
             logger.log(Level.INFO,
                     "JMSService.unsubscribe: Exception: {0}", e.toString());
             throw new Exception();
@@ -56,7 +70,7 @@ public class JMSService implements IJMSService, Serializable {
     }
 
     @Override
-    public List<String> getMessages(String subject, String user) throws Exception{
+    public List<String> getMessages(String subject, String user){
         List<String> messages = Conversation.getOrCreateConversation(storage.getConversations(), user, subject).getMessages();
         return messages;
     }

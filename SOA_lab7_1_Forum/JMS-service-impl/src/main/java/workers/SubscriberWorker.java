@@ -1,5 +1,8 @@
-package mdb.topic;
+package workers;
 
+import listeners.QueryMessageListener;
+import listeners.SubscriberMessageListener;
+import model.Storage;
 import model.Conversation;
 
 import javax.jms.*;
@@ -8,7 +11,7 @@ import java.util.logging.Logger;
 
 import static javax.jms.JMSContext.AUTO_ACKNOWLEDGE;
 
-class SubscriberWorker implements Runnable {
+public class SubscriberWorker implements Runnable {
 
     ConnectionFactory connectionFactory;
     Topic topic;
@@ -48,9 +51,10 @@ class SubscriberWorker implements Runnable {
             logger.log(Level.INFO,
                     "JMSService.subscribe: Creating consumer for topic: {0}",
                     user + subject);
-            while (true) {
+            while (!Thread.currentThread().isInterrupted()) {
                 Thread.sleep(7500);
             }
+            context.unsubscribe(user + "#" + subject);
         } catch (Exception e) {
             logger.log(Level.INFO,
                     "JMSService.subscribe: Exception: {0}", e.toString());

@@ -1,7 +1,9 @@
-package mdb.topic;
+package workers;
 
 
-import javax.ejb.ActivationConfigProperty;
+import listeners.ServerMessageListener;
+import model.Storage;
+
 import javax.jms.*;
 
 import java.util.logging.Level;
@@ -10,7 +12,7 @@ import java.util.logging.Logger;
 import static javax.jms.JMSContext.AUTO_ACKNOWLEDGE;
 
 
-class ServerWorker implements Runnable {
+public class ServerWorker implements Runnable {
 
     ConnectionFactory connectionFactory;
     Queue queue;

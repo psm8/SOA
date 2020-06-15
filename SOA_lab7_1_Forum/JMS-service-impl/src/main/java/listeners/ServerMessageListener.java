@@ -1,11 +1,12 @@
-package mdb.topic;
+package listeners;
 
+
+import model.Storage;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
-import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
