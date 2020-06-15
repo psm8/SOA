@@ -8,10 +8,6 @@ import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
-import javax.naming.InitialContext;
-import javax.naming.NameClassPair;
-import javax.naming.NamingEnumeration;
-import javax.naming.NamingException;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +17,7 @@ import java.util.Map;
 public class SubscriberBean implements Serializable {
 
 
-/*    @EJB(lookup="java:global/ear-1.0-SNAPSHOT/JMSService!mdb.topic.IJMSService")*/
+    @EJB(lookup="java:global/ear-1.0-SNAPSHOT/JMS-service-impl-1.0-SNAPSHOT/JMSService!mdb.topic.IJMSService")
     private IJMSService JMSService;
 
     private String user;
@@ -29,17 +25,6 @@ public class SubscriberBean implements Serializable {
     private Map<String, List<String>> subjectsMap;
     private List<String> messages;
 
-    SubscriberBean() throws NamingException {
-        InitialContext initialContext = new InitialContext();
-        NamingEnumeration children = initialContext.list("");
-
-        while(children.hasMore()) {
-            NameClassPair ncPair = (NameClassPair)children.next();
-            System.out.print(ncPair.getName() + " (type ");
-            System.out.println(ncPair.getClassName() + ")");
-        }
-        /*JMSService = InitialContext.doLookup("java:global/ear-1.0-SNAPSHOT/lib/JMSService!mdb.topic.IJMSService");*/
-    }
 
     public String getUser() {
         return user;

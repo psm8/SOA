@@ -8,10 +8,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
-import javax.naming.InitialContext;
-import javax.naming.NameClassPair;
-import javax.naming.NamingEnumeration;
-import javax.naming.NamingException;
 import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Level;
@@ -23,7 +19,7 @@ public class PublisherBean implements Serializable {
 
     private static final Logger logger = Logger.getLogger(PublisherBean.class.getName());
 
-/*    @EJB(lookup="java:global/ear_exploded/JMSService!mdb.topic.IJMSService")*/
+    @EJB(lookup="java:global/ear-1.0-SNAPSHOT/JMS-service-impl-1.0-SNAPSHOT/JMSService!mdb.topic.IJMSService")
     private IJMSService JMSService;
 
     private List<String> subjectsList;
@@ -31,18 +27,6 @@ public class PublisherBean implements Serializable {
     private String specificUser;
     private String message;
 
-    PublisherBean() throws NamingException {
-        InitialContext initialContext = new InitialContext();
-        NamingEnumeration children = initialContext.list("");
-
-        while(children.hasMore()) {
-            NameClassPair ncPair = (NameClassPair)children.next();
-            System.out.print(ncPair.getName() + " (type ");
-            System.out.println(ncPair.getClassName() + ")");
-            System.out.println("test");
-        }
-/*        JMSService = InitialContext.doLookup("java:global/JMS-service-impl-1.0-SNAPSHOT/JMSService!mdb.topic.IJMSService");*/
-    }
 
     public String getSpecificUser() {
         return specificUser;

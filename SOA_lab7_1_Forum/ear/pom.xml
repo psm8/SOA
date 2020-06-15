@@ -22,13 +22,13 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>JMS-service-api</artifactId>
             <version>${project.version}</version>
-            <type>jar</type>
+            <type>ejb</type>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>JMS-service-impl</artifactId>
             <version>${project.version}</version>
-            <type>jar</type>
+            <type>ejb</type>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -53,14 +53,14 @@
                     <defaultLibBundleDir>lib</defaultLibBundleDir>
                     <skinnyWars>true</skinnyWars>
                     <modules>
-                        <jarModule>
+                        <ejbModule>
                             <groupId>${project.groupId}</groupId>
                             <artifactId>JMS-service-api</artifactId>
-                        </jarModule>
-                        <jarModule>
+                        </ejbModule>
+                        <ejbModule>
                             <groupId>${project.groupId}</groupId>
                             <artifactId>JMS-service-impl</artifactId>
-                        </jarModule>
+                        </ejbModule>
                         <webModule>
                             <groupId>${project.groupId}</groupId>
                             <artifactId>client-subscriber</artifactId>
