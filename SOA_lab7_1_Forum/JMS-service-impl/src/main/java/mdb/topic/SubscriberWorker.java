@@ -37,7 +37,7 @@ class SubscriberWorker implements Runnable {
             context.stop();
             context.setClientID(user + "#" + subject);
             System.out.println("Type='" + subject +"'");
-            consumer = context.createDurableConsumer(topic , user + "#" + subject,"Type='" + subject +"'", false);
+            consumer = context.createDurableConsumer(topic , user + "#" + subject,"Type='" + subject + "'", false);
             Conversation conversation = Conversation.getOrCreateConversation(storage.getConversations(), user, subject);
             subscriberMessageListener = new SubscriberMessageListener(conversation);
             consumer.setMessageListener(subscriberMessageListener);
@@ -45,10 +45,12 @@ class SubscriberWorker implements Runnable {
             consumerQuery.setMessageListener(new QueryMessageListener(conversation));
             storage.getConversations().add(conversation);
             context.start();
-            Thread.sleep(2000);
             logger.log(Level.INFO,
                     "JMSService.subscribe: Creating consumer for topic: {0}",
                     user + subject);
+            while (true) {
+                Thread.sleep(7500);
+            }
         } catch (Exception e) {
             logger.log(Level.INFO,
                     "JMSService.subscribe: Exception: {0}", e.toString());

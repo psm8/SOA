@@ -95,7 +95,7 @@ public class JMSSender {
             logger.log(Level.INFO,
                     "JMSSender.sendMessage: Setting message text to: {0}",
                     message.getText());
-            context.createProducer().setProperty("Operation", "Operation").send(queue, message);
+            context.createProducer().send(queue, message);
         } catch (JMSException e) {
             logger.log(Level.SEVERE,
                     "JMSSender.sendMessage: Exception: {0}", e.toString());

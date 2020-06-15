@@ -76,21 +76,33 @@ public class SubscriberBean implements Serializable {
     }
 
     public void subscribe(){
-        String message = "subscription successful";
-        try {
-            JMSService.subscribe(subject, user);
-        } catch(Exception e){
-            message = "subscription failed";
+        String message;
+        List<String> topicSubsciber = subjectsMap.get(subject);
+        if(topicSubsciber.contains(user)){
+            message = "you are already a subscriber";
+        } else {
+            message = "subscription successful";
+            try {
+                JMSService.subscribe(subject, user);
+            } catch (Exception e) {
+                message = "subscription failed";
+            }
         }
         facesAddMessage(message);
     }
 
     public void unsubscribe(){
-        String message = "unsubscription successful";
-        try {
-            JMSService.unsubscribe(subject, user);
-        } catch(Exception e){
-            message = "unsubscription failed";
+        String message;
+        List<String> topicSubsciber = subjectsMap.get(subject);
+        if(!topicSubsciber.contains(user)){
+            message = "you are not a subscriber";
+        } else {
+            message = "unsubscription successful";
+            try {
+                JMSService.unsubscribe(subject, user);
+            } catch (Exception e) {
+                message = "unsubscription failed";
+            }
         }
         facesAddMessage(message);
     }

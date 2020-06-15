@@ -29,22 +29,15 @@ public class ServerMessageListener implements MessageListener {
             if (msg instanceof TextMessage) {
                 TextMessage txtMsg = (TextMessage) msg;
                 String txt = txtMsg.getText();
-                Enumeration enumeration = msg.getPropertyNames();
-                if (enumeration != null) {
-                    while (enumeration.hasMoreElements()) {
-                        String key = (String) enumeration.nextElement();
-                        if(key.equals("Operation")) {
-                            if (msg.getObjectProperty("Operation").equals("Add")) {
-                                storage.addSubject(txt);
-                                logger.log(Level.INFO,
-                                        "ServerMessageListener.onMessage: Add: {0}", txt);
-                            } else if (msg.getObjectProperty("Operation").equals("Remove")) {
-                                storage.addSubject(txt);
-                                logger.log(Level.INFO,
-                                        "ServerMessageListener.onMessage: Remove: {0}", txt);
-                            }
-                        }
-                    }
+
+                if (msg.getObjectProperty("Operation").equals("Add")) {
+                    storage.addSubject(txt);
+                    logger.log(Level.INFO,
+                            "ServerMessageListener.onMessage: Add: {0}", txt);
+                } else if (msg.getObjectProperty("Operation").equals("Remove")) {
+                    storage.removeSubject(txt);
+                    logger.log(Level.INFO,
+                            "ServerMessageListener.onMessage: Remove: {0}", txt);
                 }
             }
         } catch (JMSException e) {

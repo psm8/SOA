@@ -11,10 +11,6 @@ import javax.jms.*;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -39,12 +35,14 @@ public class JMSService implements IJMSService, Serializable {
 
     @Override
     public void subscribe(String subject, String user) throws Exception{
+        storage.addSubscriber(subject, user);
         Runnable r = new SubscriberWorker(connectionFactory, topic, queue, logger, storage, user, subject);
         new Thread(r).start();
     }
 
     @Override
     public void unsubscribe(String subject, String user) throws Exception{
+        storage.getSubjectsSubscribers().get(subject).remove(user);
         try (JMSContext context = connectionFactory.createContext(AUTO_ACKNOWLEDGE)) {
             logger.log(Level.INFO,
                     "JMSService.unsubscribe: Unsubscribing from durable subscription: {0}",
