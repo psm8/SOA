@@ -1,15 +1,19 @@
 package mdb.topic;
 
 
+import model.Conversation;
+
 import javax.ejb.Singleton;
 import java.util.*;
 
 @Singleton
 public class Storage {
     private Map<String, List<String>> subjectsSubscribers;
+    private List<Conversation> conversations;
 
     public Storage() {
         subjectsSubscribers = new HashMap<>();
+        conversations = new ArrayList<>();
     }
 
     public Map<String, List<String>> getSubjectsSubscribers() {
@@ -18,6 +22,14 @@ public class Storage {
 
     public List<String> getSubjects(){
         return new ArrayList<>(subjectsSubscribers.keySet());
+    }
+
+    public List<Conversation> getConversations() {
+        return conversations;
+    }
+
+    public void setConversations(List<Conversation> conversations) {
+        this.conversations = conversations;
     }
 
     public void addSubjectsSubscribers(Map<String, List<String>> subjectsConversations) {

@@ -1,43 +1,57 @@
 package mdb.topic;
 
+import model.Conversation;
+
 import javax.jms.*;
-import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static javax.jms.JMSContext.AUTO_ACKNOWLEDGE;
 
-class SubscriberWorker implements Callable<String> {
+class SubscriberWorker implements Runnable {
 
     ConnectionFactory connectionFactory;
+    Topic topic;
     Queue queue;
     Logger logger;
-    String id;
+    Storage storage;
+    String user;
+    String subject;
 
-    public SubscriberWorker(ConnectionFactory connectionFactory, Queue queue, Logger logger, String id) {
+    public SubscriberWorker(ConnectionFactory connectionFactory, Topic topic, Queue queue, Logger logger, Storage storage, String user, String subject) {
         this.connectionFactory = connectionFactory;
+        this.topic = topic;
         this.queue = queue;
         this.logger = logger;
-        this.id = id;
+        this.storage = storage;
+        this.user = user;
+        this.subject = subject;
     }
 
     @Override
-    public String call() {
-        SubscriberMessageListener subscriberMessageListener = new SubscriberMessageListener(id);
-        try {
-            try (JMSContext context = connectionFactory.createContext(AUTO_ACKNOWLEDGE)){
-                context.stop();
-                JMSConsumer consumer = context.createConsumer(queue);
-                consumer.setMessageListener(subscriberMessageListener);
-                context.start();
-                while (subscriberMessageListener.getMessages() == null) {
-                    Thread.sleep(5000);
-                }
-            } catch (JMSRuntimeException e) {
-                logger.log(Level.INFO,
-                        "JMSService.ServerWorker: Exception: {0}", e.toString());
-            }
-        } catch (Exception e) {}
-        return subscriberMessageListener.getMessages().get(0);
+    public void run() {
+        JMSConsumer consumer;
+        SubscriberMessageListener subscriberMessageListener;
+
+        try (JMSContext context = connectionFactory.createContext(AUTO_ACKNOWLEDGE)){
+            context.stop();
+            context.setClientID(user + "#" + subject);
+            System.out.println("Type='" + subject +"'");
+            consumer = context.createDurableConsumer(topic , user + "#" + subject,"Type='" + subject +"'", false);
+            Conversation conversation = Conversation.getOrCreateConversation(storage.getConversations(), user, subject);
+            subscriberMessageListener = new SubscriberMessageListener(conversation);
+            consumer.setMessageListener(subscriberMessageListener);
+            JMSConsumer consumerQuery = context.createConsumer(queue, "Type='" + user + "#" + subject + "'");
+            consumerQuery.setMessageListener(new QueryMessageListener(conversation));
+            storage.getConversations().add(conversation);
+            context.start();
+            Thread.sleep(2000);
+            logger.log(Level.INFO,
+                    "JMSService.subscribe: Creating consumer for topic: {0}",
+                    user + subject);
+        } catch (Exception e) {
+            logger.log(Level.INFO,
+                    "JMSService.subscribe: Exception: {0}", e.toString());
+        }
     }
 }

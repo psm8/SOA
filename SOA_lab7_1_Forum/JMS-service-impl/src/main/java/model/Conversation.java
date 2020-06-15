@@ -29,4 +29,24 @@ public class Conversation {
         }
         messages.add(message);
     }
+
+    public static boolean checkIfExist(Conversation c, List<Conversation> conversations){
+        for( Conversation conversation: conversations){
+            if(conversation.equals(c)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static Conversation getOrCreateConversation(List<Conversation> conversations, String user, String subject){
+        for( Conversation conversation: conversations){
+            if(conversation.getId().equals(user + "#" + subject)){
+                return conversation;
+            }
+        }
+        Conversation c = new Conversation();
+        c.setId(user + "#" + subject);
+        return c;
+    }
 }

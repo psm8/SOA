@@ -1,11 +1,14 @@
 package mdb.topic;
 
+
+import javax.ejb.ActivationConfigProperty;
 import javax.jms.*;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static javax.jms.JMSContext.AUTO_ACKNOWLEDGE;
+
 
 class ServerWorker implements Runnable {
 
@@ -26,7 +29,7 @@ class ServerWorker implements Runnable {
         try {
             try (JMSContext context = connectionFactory.createContext(AUTO_ACKNOWLEDGE)){
                 context.stop();
-                JMSConsumer consumer = context.createConsumer(queue);
+                JMSConsumer consumer = context.createConsumer(queue,"filtering='Operation'");
                 consumer.setMessageListener(new ServerMessageListener(storage));
                 context.start();
                 while (true) {

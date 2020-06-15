@@ -9,11 +9,15 @@ import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+
 public class ServerMessageListener implements MessageListener {
 
     static final Logger logger = Logger.getLogger("ServerMessageListener");
 
     private Storage storage;
+
+    public ServerMessageListener() {
+    }
 
     public ServerMessageListener(Storage storage) {
         this.storage = storage;

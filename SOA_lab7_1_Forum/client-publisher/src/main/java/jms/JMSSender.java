@@ -38,12 +38,12 @@ public class JMSSender {
             message.setStringProperty("Type", subject);
             message.setText(txt);
             logger.log(Level.INFO,
-                    "JMSService.sendMessage: Setting message text to: {0}",
+                    "JMSSender.sendMessage: Setting message text to: {0}",
                     message.getText());
             context.createProducer().send(topic, message);
         } catch (JMSException e) {
             logger.log(Level.SEVERE,
-                    "JMSService.sendMessage: Exception: {0}", e.toString());
+                    "JMSSender.sendMessage: Exception: {0}", e.toString());
             sc.setRollbackOnly();
         }
     }
@@ -52,15 +52,15 @@ public class JMSSender {
         TextMessage message;
         try (JMSContext context = connectionFactory.createContext(AUTO_ACKNOWLEDGE)){
             message = context.createTextMessage();
-            message.setStringProperty("Type", subject);
+            message.setStringProperty("Type", specificUser + "#" + subject);
             message.setText(txt);
             logger.log(Level.INFO,
-                    "JMSService.sendMessage: Setting message text to: {0}",
+                    "JMSSender.sendMessage: Setting message text to: {0}",
                     message.getText());
             context.createProducer().send(queue, message);
         } catch (JMSException e) {
             logger.log(Level.SEVERE,
-                    "JMSService.sendMessage: Exception: {0}", e.toString());
+                    "JMSSender.sendMessage: Exception: {0}", e.toString());
             sc.setRollbackOnly();
         }
     }
@@ -70,6 +70,7 @@ public class JMSSender {
         try (JMSContext context = connectionFactory.createContext(AUTO_ACKNOWLEDGE)){
             message = context.createTextMessage();
             message.setStringProperty("Operation", "Add");
+            message.setStringProperty("filtering", "Operation");
             message.setText(subject);
             logger.log(Level.INFO,
                     "JMSSender.sendMessage: Setting message text to: {0}",
@@ -89,11 +90,12 @@ public class JMSSender {
         try (JMSContext context = connectionFactory.createContext(AUTO_ACKNOWLEDGE)){
             message = context.createTextMessage();
             message.setStringProperty("Operation", "Remove");
+            message.setStringProperty("filtering", "Operation");
             message.setText(subject);
             logger.log(Level.INFO,
                     "JMSSender.sendMessage: Setting message text to: {0}",
                     message.getText());
-            context.createProducer().send(queue, message);
+            context.createProducer().setProperty("Operation", "Operation").send(queue, message);
         } catch (JMSException e) {
             logger.log(Level.SEVERE,
                     "JMSSender.sendMessage: Exception: {0}", e.toString());
@@ -107,6 +109,9 @@ public class JMSSender {
     private void addFakeData(){
         for (int i = 0; i < 10; i++) {
             this.addSubject("t" + i);
+            for (int j = 0; j < 5; j++) {
+                this.sendMessage("t"+i,"mes"+j + "t" + i);
+            }
         }
     }
 }
