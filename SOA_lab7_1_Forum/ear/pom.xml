@@ -22,11 +22,13 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>JMS-service-api</artifactId>
             <version>${project.version}</version>
+            <type>jar</type>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>JMS-service-impl</artifactId>
             <version>${project.version}</version>
+            <type>jar</type>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -48,7 +50,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-ear-plugin</artifactId>
                 <configuration>
-                    <version>6</version>
                     <defaultLibBundleDir>lib</defaultLibBundleDir>
                     <skinnyWars>true</skinnyWars>
                     <modules>
@@ -64,11 +65,13 @@
                             <groupId>${project.groupId}</groupId>
                             <artifactId>client-subscriber</artifactId>
                             <unpack>${unpack.wars}</unpack>
+                            <contextRoot>/subscriber</contextRoot>
                         </webModule>
                         <webModule>
                             <groupId>${project.groupId}</groupId>
                             <artifactId>client-publisher</artifactId>
                             <unpack>${unpack.wars}</unpack>
+                            <contextRoot>/publisher</contextRoot>
                         </webModule>
                     </modules>
                 </configuration>

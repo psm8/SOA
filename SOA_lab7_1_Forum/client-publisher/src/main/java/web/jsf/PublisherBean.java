@@ -23,7 +23,7 @@ public class PublisherBean implements Serializable {
 
     private static final Logger logger = Logger.getLogger(PublisherBean.class.getName());
 
-    @EJB(lookup="java:global/ear_exploded/JMSService!mdb.topic.IJMSService")
+/*    @EJB(lookup="java:global/ear_exploded/JMSService!mdb.topic.IJMSService")*/
     private IJMSService JMSService;
 
     private List<String> subjectsList;

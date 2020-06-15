@@ -21,7 +21,7 @@ import java.util.Map;
 public class SubscriberBean implements Serializable {
 
 
-    @EJB(lookup="java:global/ear_exploded/JMSService!mdb.topic.IJMSService")
+/*    @EJB(lookup="java:global/ear-1.0-SNAPSHOT/JMSService!mdb.topic.IJMSService")*/
     private IJMSService JMSService;
 
     private String user;
