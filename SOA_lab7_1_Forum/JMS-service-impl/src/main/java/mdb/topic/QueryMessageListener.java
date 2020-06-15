@@ -1,23 +1,32 @@
 package mdb.topic;
 
+import model.Conversation;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class ServerMessageListener implements MessageListener {
+public class QueryMessageListener implements MessageListener {
 
-    static final Logger logger = Logger.getLogger("ServerMessageListener");
+    static final Logger logger = Logger.getLogger("SubscriberMessageListener");
 
-    private Storage storage;
+    private Conversation conversation;
 
-    public ServerMessageListener(Storage storage) {
-        this.storage = storage;
+    public QueryMessageListener(String id) {
+        this.conversation = new Conversation();
+        conversation.setId(id);
     }
+
+    public String getId() {
+        return conversation.getId();
+    }
+
+    public List<String> getMessages(){return conversation.getMessages();}
 
     @Override
     public void onMessage(Message msg) {
@@ -30,15 +39,9 @@ public class ServerMessageListener implements MessageListener {
                     while (enumeration.hasMoreElements()) {
                         String key = (String) enumeration.nextElement();
                         if(key.equals("Operation")) {
-                            if (msg.getObjectProperty("Operation").equals("Add")) {
-                                storage.addSubject(txt);
-                                logger.log(Level.INFO,
-                                        "ServerMessageListener.onMessage: Add: {0}", txt);
-                            } else if (msg.getObjectProperty("Operation").equals("Remove")) {
-                                storage.addSubject(txt);
-                                logger.log(Level.INFO,
-                                        "ServerMessageListener.onMessage: Remove: {0}", txt);
-                            }
+
+
+
                         }
                     }
                 }

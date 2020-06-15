@@ -74,12 +74,10 @@ public class PublisherBean implements Serializable {
 
     public void sendMessage(){
         if(specificUser == null || specificUser.equals("")){
-            sendToAll(subject);
+            JMSSender.sendMessage(subject, message);
+        } else {
+            JMSSender.sendMessageToOne(specificUser, subject, message);
         }
-    }
-
-    public void sendToAll(String subject){
-        JMSSender.sendMessage(subject, message);
     }
 
     public String delete() {

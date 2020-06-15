@@ -8,8 +8,7 @@ import java.util.Map;
 public interface IJMSService {
     void subscribe(String subject, String user) throws Exception;
     void unsubscribe(String subject, String user) throws Exception;
-    void addSubject(String subject);
-    void removeSubject(String subject);
-    List<String> getSubjects();
+    List<String> getMessages(String subject, String user) throws Exception;
+    String getNotification(String subject, String user) throws Exception;
     Map<String, List<String>> getSubjectsSubscribers();
 }

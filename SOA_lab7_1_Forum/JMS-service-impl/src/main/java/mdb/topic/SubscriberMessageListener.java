@@ -3,12 +3,13 @@ package mdb.topic;
 
 import model.Conversation;
 
-import javax.inject.Inject;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
-import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /*@MessageDriven(
@@ -20,28 +21,48 @@ public class SubscriberMessageListener implements MessageListener {
 
     static final Logger logger = Logger.getLogger("SubscriberMessageListener");
 
-    private String id;
-    private Storage storage;
+    private Conversation conversation;
 
-    public SubscriberMessageListener(String id, Storage storage) {
-        this.id = id;
-        this.storage = storage;
+    public SubscriberMessageListener(String id) {
+        this.conversation = new Conversation();
+        conversation.setId(id);
     }
 
     public String getId() {
-        return id;
+        return conversation.getId();
     }
+
+    public List<String> getMessages(){return conversation.getMessages();}
 
     @Override
     public void onMessage(Message msg) {
-        TextMessage txtMsg = null;
-        try {
+        try{
             if (msg instanceof TextMessage) {
-                txtMsg = (TextMessage) msg;
-                String test = msg.getPropertyNames().nextElement().toString();
+                TextMessage txtMsg = (TextMessage) msg;
                 String txt = txtMsg.getText();
-                storage.addConversation(txt, new Conversation());
+                Enumeration enumeration = msg.getPropertyNames();
+                if (enumeration != null) {
+                    while (enumeration.hasMoreElements()) {
+                        String key = (String) enumeration.nextElement();
+                        if (key.equals("Type")) {
+                            if (msg.getObjectProperty("Type").equals(
+                                    getId().substring(getId().lastIndexOf("#") + 1))) {
+                                conversation.addMessage(txt);
+                                logger.log(Level.INFO,
+                                        "SubscriberMessageListener.onMessage: "+
+                                                getId().substring(getId().lastIndexOf("#") + 1) + ": {0}", txt);
+                            }
+                            logger.log(Level.INFO,
+                                    "SubscriberMessageListener.onMessage: "+
+                                            getId().substring(getId().lastIndexOf("#") + 1) + ": {0}", txt);
+                            System.out.println(msg.getObjectProperty("Type"));
+                        }
+                    }
+                }
             }
-        } catch (JMSException e) {}
+        } catch (JMSException e) {
+            logger.log(Level.SEVERE,
+                    "SubscriberMessageListener.onMessage: Exception: {0}", e.toString());
+        }
     }
 }

@@ -1,17 +1,18 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Conversation {
-    private String user;
+    private String id;
     List<String> messages;
 
-    public String getUser() {
-        return user;
+    public String getId() {
+        return id;
     }
 
-    public void setUser(String user) {
-        this.user = user;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public List<String> getMessages() {
@@ -23,6 +24,9 @@ public class Conversation {
     }
 
     public void addMessage(String message){
+        if(messages == null) {
+            messages = new ArrayList<>();
+        }
         messages.add(message);
     }
 }

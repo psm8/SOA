@@ -1,62 +1,51 @@
 package mdb.topic;
 
-import model.Conversation;
 
 import javax.ejb.Singleton;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Singleton
 public class Storage {
-    private Map<String, List<Conversation>> subjectsConversations;
+    private Map<String, List<String>> subjectsSubscribers;
 
     public Storage() {
-        subjectsConversations = new HashMap<>();
+        subjectsSubscribers = new HashMap<>();
     }
 
     public Map<String, List<String>> getSubjectsSubscribers() {
-        return subjectsConversations.entrySet().stream().collect(Collectors.toMap(
-                Map.Entry::getKey,
-                e -> {
-                   List<String> result = new ArrayList<>();
-                   for(Conversation c:e.getValue()){
-                       result.add(c.getUser());
-                   }
-                   return result;
-                })
-        );
+        return subjectsSubscribers;
     }
 
     public List<String> getSubjects(){
-        return new ArrayList<>(subjectsConversations.keySet());
+        return new ArrayList<>(subjectsSubscribers.keySet());
     }
 
-    public void addSubjectsConversations(Map<String, List<Conversation>> subjectsConversations) {
-        this.subjectsConversations = subjectsConversations;
+    public void addSubjectsSubscribers(Map<String, List<String>> subjectsConversations) {
+        this.subjectsSubscribers = subjectsConversations;
     }
 
-    public void addSubjectsConversations(String subject, List<Conversation> conversations){
-        if(!subjectsConversations.containsKey(subject)) {
-            subjectsConversations.put(subject, conversations);
+    public void addSubjectsSubscribers(String subject, List<String> subscribers){
+        if(!subjectsSubscribers.containsKey(subject)) {
+            subjectsSubscribers.put(subject, subscribers);
         }
     }
 
     public void addSubject(String subject){
-        if(!subjectsConversations.containsKey(subject)) {
-            subjectsConversations.put(subject, new ArrayList<>());
+        if(!subjectsSubscribers.containsKey(subject)) {
+            subjectsSubscribers.put(subject, new ArrayList<>());
         }
     }
 
     public void removeSubject(String subject){
-        subjectsConversations.remove(subject);
+        subjectsSubscribers.remove(subject);
     }
 
-    public void addConversation(String subject, Conversation conversation){
-        if(!subjectsConversations.containsKey(subject)) {
-            List<Conversation> conversations = new ArrayList<>();
-            conversations.add(conversation);
-            subjectsConversations.put(subject, conversations);
+    public void addSubscriber(String subject, String subscriber){
+        if(!subjectsSubscribers.containsKey(subject)) {
+            List<String> subscribers = new ArrayList<>();
+            subscribers.add(subscriber);
+            subjectsSubscribers.put(subject, subscribers);
         }
-        subjectsConversations.get(subject).add(conversation);
+        subjectsSubscribers.get(subject).add(subscriber);
     }
 }

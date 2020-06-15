@@ -48,7 +48,7 @@ public class JMSSender {
         }
     }
 
-    public void sendMessageToOne(String subject, String txt) {
+    public void sendMessageToOne(String specificUser, String subject, String txt) {
         TextMessage message;
         try (JMSContext context = connectionFactory.createContext(AUTO_ACKNOWLEDGE)){
             message = context.createTextMessage();

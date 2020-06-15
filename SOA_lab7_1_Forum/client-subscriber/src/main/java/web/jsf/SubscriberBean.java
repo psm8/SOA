@@ -25,6 +25,8 @@ public class SubscriberBean implements Serializable {
     private Map<String, List<String>> subjectsMap;
     private List<String> messages;
 
+    private Thread t;
+
 
     public String getUser() {
         return user;
@@ -43,12 +45,19 @@ public class SubscriberBean implements Serializable {
     }
 
     public Map<String, List<String>> getSubjectsMap() {
+        String message = "success";
         try {
+            if(t != null) {
+                if (t.isAlive()) {
+                    t.interrupt();
+                    t = null;
+                }
+            }
             subjectsMap = JMSService.getSubjectsSubscribers();
         } catch (Exception e){
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("couldn't get subject map"));
-            FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+            message = "couldn't get messages";
         }
+        facesAddMessage(message);
         return subjectsMap;
     }
 
@@ -57,6 +66,7 @@ public class SubscriberBean implements Serializable {
     }
 
     public List<String> getMessages() {
+        loadMessages();
         return messages;
     }
 
@@ -65,27 +75,58 @@ public class SubscriberBean implements Serializable {
     }
 
     public void loadMessages(){
-        this.messages = null /*JMSService.getSubjects()*/;
+        String message = "success";
+        try {
+            if(t != null) {
+                if (t.isAlive()) {
+                    t.interrupt();
+                    t = null;
+                }
+            }
+            messages = JMSService.getMessages(subject, user);
+        } catch(Exception e){
+            message = "couldn't get messages";
+        }
+        facesAddMessage(message);
     }
 
     public void subscribe(){
         String message = "subscription successful";
         try {
+            if(t != null) {
+                if (t.isAlive()) {
+                    t.interrupt();
+                    t = null;
+                }
+            }
             JMSService.subscribe(subject, user);
+            if(t == null) {
+                t = new Thread(new Notification(JMSService, subject, user));
+                t.start();
+            }
         } catch(Exception e){
             message = "subscription failed";
         }
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(message));
-        FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
+        facesAddMessage(message);
     }
 
     public void unsubscribe(){
         String message = "unsubscription successful";
         try {
+            if(t != null) {
+                if (t.isAlive()) {
+                    t.interrupt();
+                    t = null;
+                }
+            }
             JMSService.unsubscribe(subject, user);
         } catch(Exception e){
             message = "unsubscription failed";
         }
+        facesAddMessage(message);
+    }
+
+    private void facesAddMessage(String message){
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(message));
         FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
     }
