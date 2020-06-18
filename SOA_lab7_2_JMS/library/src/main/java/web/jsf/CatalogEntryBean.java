@@ -1,4 +1,4 @@
-package beans;
+package web.jsf;
 
 import domain.Author;
 import domain.Book;
@@ -7,6 +7,7 @@ import domain.Category;
 import repository.CRUDRepository;
 
 import javax.enterprise.context.RequestScoped;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -142,8 +143,18 @@ public class CatalogEntryBean {
     }
 
     public String deleteCatalogEntry(Catalog obj) {
-        catalogRepository.delete(Category.class, obj);
+        try {
+            catalogRepository.delete(Category.class, obj);
+        } catch (Exception e){
+            facesAddMessage(e.getMessage());
+            return "catalog.xhtml?faces-redirect=true";
+        }
         return "catalog.xhtml?faces-redirect=true";
+    }
+
+    private void facesAddMessage(String message){
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(message));
+        FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
     }
 
 

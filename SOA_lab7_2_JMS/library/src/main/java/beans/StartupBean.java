@@ -41,8 +41,7 @@ public class StartupBean {
     }
 
     @PostConstruct
-    private void startup() {
-
+    private void startup() throws Exception{
         for (int i = 0; i < 50; i++) {
             Date[] dates = getRandomDates();
             rentalRepository.create(new Rental(

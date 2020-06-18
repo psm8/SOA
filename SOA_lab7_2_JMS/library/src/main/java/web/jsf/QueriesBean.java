@@ -1,4 +1,4 @@
-package beans;
+package web.jsf;
 
 import domain.*;
 import repository.CRUDRepository;

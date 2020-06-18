@@ -1,7 +1,6 @@
-package beans;
+package web.jsf;
 
 import domain.Catalog;
-import domain.Rental;
 import repository.CRUDRepository;
 
 import javax.annotation.PostConstruct;
