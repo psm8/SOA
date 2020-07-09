@@ -4,9 +4,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>groupId</groupId>
+    <parent>
+        <groupId>com.lab.soa</groupId>
+        <artifactId>Piotr-Seemann-soa2020-egzamin</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
     <artifactId>db</artifactId>
-    <version>1.0-SNAPSHOT</version>
+
+    <packaging>jar</packaging>
 
     
 </project>
