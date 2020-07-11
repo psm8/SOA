@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -15,7 +16,9 @@ public class Data {
     @Id
     @GeneratedValue
     @Column(name = "id", nullable = false)
-    private int id;
+    private long id;
+    @Column(name = "id", nullable = false)
+    private Date timestamp;
     @Column(name = "data")
     private String data;
 }
