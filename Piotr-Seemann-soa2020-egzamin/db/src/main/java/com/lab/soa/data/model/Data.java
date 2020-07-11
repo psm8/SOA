@@ -1,24 +1,32 @@
 package com.lab.soa.data.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@RequiredArgsConstructor
+@ToString
+@Entity
 @Table(name = "data")
 public class Data {
     @Id
     @GeneratedValue
     @Column(name = "id", nullable = false)
     private long id;
-    @Column(name = "id", nullable = false)
-    private Date timestamp;
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "create_date", updatable = false)
+    private Date createDate;
+    @UpdateTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "modify_date")
+    private Date modifyDate;
     @Column(name = "data")
-    private String data;
+    @NonNull private String data;
 }

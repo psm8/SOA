@@ -15,7 +15,7 @@ import java.util.List;
 @Stateless
 public class CRUDRepositoryImpl<T> implements CRUDRepository<T>, Serializable {
 
-    private static final Logger log = Logger.getLogger(CRUDRepository.class.getPackage().getName());
+    private static final Logger log = Logger.getLogger(CRUDRepository.class);
 
     @PersistenceContext(unitName = "SOA_lab6_1_Library")
     EntityManager em;

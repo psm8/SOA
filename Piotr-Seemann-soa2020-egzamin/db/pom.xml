@@ -28,5 +28,8 @@
         </dependency>
     </dependencies>
 
-    
+    <build>
+        <finalName>${parent.artifactId}-${project.artifactId}</finalName>
+    </build>
+
 </project>
