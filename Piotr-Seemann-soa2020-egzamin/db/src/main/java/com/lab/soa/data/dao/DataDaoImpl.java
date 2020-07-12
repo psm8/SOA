@@ -31,7 +31,11 @@ public class DataDaoImpl implements DataDao {
 
     @Override
     public Data get(long id) {
-        return em.find(Data.class, id);
+
+        Data obj = em.find(Data.class, id);
+        LOG.info("Updated in database:\n" + obj);
+
+        return obj;
     }
 
     @Override
