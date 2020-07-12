@@ -1,14 +1,14 @@
 package com.lab.soa.soap;
 
-import com.lab.soa.data.dao.DataDao;
-import com.lab.soa.data.model.Data;
 import com.lab.soa.data.service.DataService;
-import com.lab.soa.jms.service.JMSService;
+import com.lab.soa.service.ActionService;
 import org.jboss.logging.Logger;
 import org.jboss.security.annotation.SecurityDomain;
 import org.jboss.ws.api.annotation.WebContext;
 
-import javax.ejb.Asynchronous;
+import javax.annotation.security.DeclareRoles;
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.jws.WebMethod;
@@ -18,6 +18,7 @@ import javax.jws.WebService;
 @Stateless
 @WebService
 @SecurityDomain("SOA_2020-egzamin-security-domain")
+@DeclareRoles("soa2020")
 @WebContext(contextRoot = "/soap", urlPattern = "/dataWebService")
 public class DataWebService {
 
@@ -27,31 +28,26 @@ public class DataWebService {
     DataService dataService;
 
     @Inject
-    JMSService JMSService;
+    ActionService actionService;
 
     @WebMethod(action = "push")
+    @PermitAll
     public long push(@WebParam(name = "data") String data) throws Exception {
 
         long id = dataService.create(data);
-        action(id);
+
+        LOG.info("Starting asynchronous action for data: " + data);
+        actionService.action(id);
 
         return id;
     }
 
     @WebMethod(action = "check")
+    @RolesAllowed("soa2020")
     public boolean check(@WebParam(name = "id") long id) {
 
+        LOG.info("Checking if action is completed for id: " + id);
         return dataService.checkIsCompleted(id);
-    }
-
-    @Asynchronous
-    private void action(long id) {
-        int actionDuration = 5000 + (int) (45000 * Math.random());
-        try {
-            Thread.sleep(actionDuration);
-        }catch (Exception e){LOG.error(e.getMessage());}
-
-        JMSService.sendMessage(String.valueOf(id));
     }
 
 }

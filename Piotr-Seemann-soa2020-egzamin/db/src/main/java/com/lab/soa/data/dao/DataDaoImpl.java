@@ -33,7 +33,7 @@ public class DataDaoImpl implements DataDao {
     public Data get(long id) {
 
         Data obj = em.find(Data.class, id);
-        LOG.info("Updated in database:\n" + obj);
+        LOG.info("Getting from database:\n" + obj);
 
         return obj;
     }

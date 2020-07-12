@@ -23,7 +23,6 @@ public class Data {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "create_date", updatable = false)
     private Date createDate;
-    @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "message_received_date")
     private Date messageReceivedDate;

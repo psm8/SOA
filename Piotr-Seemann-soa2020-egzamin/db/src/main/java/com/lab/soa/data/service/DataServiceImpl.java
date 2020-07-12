@@ -6,6 +6,7 @@ import org.jboss.logging.Logger;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import java.util.Date;
 
 @Stateless
 public class DataServiceImpl implements DataService {
@@ -26,12 +27,13 @@ public class DataServiceImpl implements DataService {
     public boolean checkIsCompleted(long id) {
         Data obj = dataDao.get(id);
 
-        return obj.getMessageReceivedDate() != null;
+        return obj.getMessageReceivedDate() != null && !obj.getMessageReceivedDate().equals(obj.getCreateDate());
     }
 
     @Override
     public Data update(long id) throws Exception {
         Data obj = dataDao.get(id);
+        obj.setMessageReceivedDate(new Date());
 
         return dataDao.update(obj);
     }
