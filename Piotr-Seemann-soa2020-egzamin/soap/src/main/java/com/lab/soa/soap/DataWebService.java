@@ -49,5 +49,4 @@ public class DataWebService {
         LOG.info("Checking if action is completed for id: " + id);
         return dataService.checkIsCompleted(id);
     }
-
 }

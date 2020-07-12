@@ -24,7 +24,7 @@ public class ActionMessageBean implements MessageListener {
     DataService dataService;
 
     public void onMessage(Message msg) {
-        TextMessage txtMsg = null;
+        TextMessage txtMsg;
         try {
             if (msg instanceof TextMessage) {
                 txtMsg = (TextMessage) msg;
