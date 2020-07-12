@@ -27,6 +27,8 @@ public class DataServiceImpl implements DataService {
     public boolean checkIsCompleted(long id) {
         Data obj = dataDao.get(id);
 
+        if(obj == null){ return false; }
+
         return obj.getMessageReceivedDate() != null && !obj.getMessageReceivedDate().equals(obj.getCreateDate());
     }
 

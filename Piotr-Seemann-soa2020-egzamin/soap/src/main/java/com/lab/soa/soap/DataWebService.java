@@ -6,7 +6,7 @@ import org.jboss.logging.Logger;
 import org.jboss.security.annotation.SecurityDomain;
 import org.jboss.ws.api.annotation.WebContext;
 
-import javax.annotation.security.DeclareRoles;
+
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
@@ -18,8 +18,8 @@ import javax.jws.WebService;
 @Stateless
 @WebService
 @SecurityDomain("SOA_2020-egzamin-security-domain")
-@DeclareRoles("soa2020")
-@WebContext(contextRoot = "/soap", urlPattern = "/dataWebService")
+@WebContext(contextRoot = "/soap", urlPattern = "/dataWebService",
+            authMethod = "BASIC", transportGuarantee = "NONE")
 public class DataWebService {
 
     private static final Logger LOG = Logger.getLogger(DataWebService.class);
