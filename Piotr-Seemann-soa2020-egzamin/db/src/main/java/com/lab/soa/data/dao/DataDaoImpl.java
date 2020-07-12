@@ -7,8 +7,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
-import javax.persistence.criteria.CriteriaQuery;
-import java.util.List;
+
 
 @Stateless
 public class DataDaoImpl implements DataDao {
@@ -36,13 +35,6 @@ public class DataDaoImpl implements DataDao {
     }
 
     @Override
-    public List<Data> getAll() {
-        CriteriaQuery<Data> cq = em.getCriteriaBuilder().createQuery(Data.class);
-        cq.select(cq.from(Data.class));
-        return em.createQuery(cq).getResultList();
-    }
-
-    @Override
     public Data update(Data data) throws Exception {
         try{
             em.merge(data);
@@ -53,16 +45,5 @@ public class DataDaoImpl implements DataDao {
         }
 
         return data;
-    }
-
-    @Override
-    public void delete(Data data) throws Exception {
-        try{
-            this.em.remove(em.contains(data) ? data : em.merge(data));
-            LOG.info("Removed from database:\n" + data);
-        } catch (PersistenceException e) {
-            LOG.error((e.getMessage()));
-            throw new Exception(e.getMessage());
-        }
     }
 }

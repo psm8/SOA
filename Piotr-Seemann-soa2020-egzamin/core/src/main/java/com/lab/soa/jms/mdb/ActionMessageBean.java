@@ -1,7 +1,6 @@
 package com.lab.soa.jms.mdb;
 
-import com.lab.soa.data.dao.DataDao;
-import com.lab.soa.data.model.Data;
+import com.lab.soa.data.service.DataService;
 import org.jboss.logging.Logger;
 
 import javax.ejb.ActivationConfigProperty;
@@ -22,7 +21,7 @@ public class ActionMessageBean implements MessageListener {
     private static final Logger LOG = Logger.getLogger(ActionMessageBean.class);
 
     @Inject
-    DataDao dataDao;
+    DataService dataService;
 
     public void onMessage(Message msg) {
         TextMessage txtMsg = null;
@@ -30,7 +29,7 @@ public class ActionMessageBean implements MessageListener {
             if (msg instanceof TextMessage) {
                 txtMsg = (TextMessage) msg;
                 String txt = txtMsg.getText();
-                dataDao.update(new Data(txt));
+                dataService.update(Long.parseLong(txt));
             }
         } catch (Exception e) {
             LOG.error((e.getMessage()));
