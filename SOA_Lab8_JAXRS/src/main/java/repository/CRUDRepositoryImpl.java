@@ -12,6 +12,7 @@ import javax.persistence.criteria.Root;
 import java.io.Serializable;
 import java.util.List;
 
+
 @Stateless
 public class CRUDRepositoryImpl<T> implements CRUDRepository<T>, Serializable {
 

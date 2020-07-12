@@ -25,8 +25,8 @@ public class Data {
     private Date createDate;
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "modify_date")
-    private Date modifyDate;
+    @Column(name = "message_received_date")
+    private Date messageReceivedDate;
     @Column(name = "data")
     @NonNull private String data;
 }
